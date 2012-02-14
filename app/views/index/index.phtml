@@ -1,0 +1,35 @@
+<!-- message d'accueil -->
+<?php echo $this->translate->t('page home'); ?>
+
+<?php if(isset($this->error)): ?>
+<!-- affichage erreurs -->
+<div class="error">
+  <?php echo $this->error; ?>
+</div>
+<?php endif; ?>
+
+<?php if(isset($this->ok)): ?>
+<!-- affichage messages ok -->
+<div class="ok">
+  <?php echo $this->ok; ?>
+</div>
+<?php endif; ?>
+
+<?php if($this->user->isLogged()) : ?>
+  <p><?php echo $this->translate->t('welcome'); ?> <b><?php echo $this->user->id(); ?></b> (<a href="<?php echo $this->url->display(array('c'=>'user','a'=>'logout')); ?>"><?php echo $this->translate->t('logout'); ?></a>)</p>
+  
+<?php else: ?>
+<!-- affichage formulaire -->
+<form method="post" action="<?php echo $this->url->display(array('c'=>'user', 'a'=>'login')); ?>">
+  <fieldset>
+  <legend><?php echo $this->translate->t('connection'); ?></legend>
+  <p>
+    <label for="openid"><?php echo $this->translate->t('openid'); ?></label>
+    <input type="text" name="openid" id="openid" />
+    
+    <label></label>
+    <input type="submit" value="Se connecter" />
+  </p>
+  </fieldset>
+</form>
+<?php endif; ?>

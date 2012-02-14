@@ -1,1 +1,87 @@
-Hello World
+Une liste des fonctionnalités que j'aimerais ajouter :
+    *) Améliorer la classe Model
+    *) Des exceptions ! --> à continuer
+    *) De la documentation /!\
+    *) Un système de cache
+    
+Je pourrais espérer une version 1.0.0 lorsque ceci aura été implémenté ;)
+
+
+========
+REQUIS
+* Un serveur Apache
+* PHP Version 5 ou plus
+* Avec l'url rewriting activé, c'est mieux, mais ça fonctionne très bien sans ;)
+
+
+========
+INSTALLATION
+1. Décompresser l'archive et la placer sur le serveur.
+2. Vérifier que les droits en lecture / écriture sont mis sur le répertoire de logs
+
+[Dans /app/configuration/application.ini]
+2. En fonction de si l'url_rewriting est activé sur votre serveur, modifiez (ou non) le paramètre use_url_rewriting.
+3. Modifier le nom de domaine. Si le chemin pour y accéder est quelque chose du genre : http://votre-domaine.fr/public, alors pensez à ajouter le /public
+
+[si ça ne fonctionne pas]
+4. Pensez à regarder les logs PHP et les logs de l'application (encore que les logs PHP seront beaucoup plus complets)
+5. Si vraiment ça ne marche pas, contactez-moi (contact@marienfressinaud.fr) et je pourrais peut-être vous aider :)
+
+
+========
+CHANGELOG
+2012-02-12 Changes with MINZ 0.5.0 :
+ *) Ajout d'un paramètre de configuration indiquant la langue affichée actuellement par le site
+ *) Ajout d'une classe Translate permettant de faciliter l'internationalisation du site
+ *) Ajout d'une classe Session pour "mieux" gérer la variable $_SESSION
+ *) Ajout d'une classe History permettant de sauvegarder l'historique de navigation
+ *) Ajout de classe Models User gérant XMPP et OpenID
+ *) Ajout de classes Exception : MinzException et XMPPException
+ *) Ajout de DAO Model_array et Model_txt
+ *) Retouche design + application complète
+ *) Correction divers bugs
+ 
+2011-10-30 Changes with MINZ 0.4.0 :
+
+ *) Suppression de constantes inutiles dans le index.php
+ *) Renommage du fichier /app/Bootstrap.php en /app/AppBootstrap.php
+ *) Amélioration du routage des Url (gestion des urls dynamiques)
+ *) Ajout d'une classe Configuration + gestion des fichiers .ini
+ *) Le fichier de config doit obligatoirement posséder les paramètres "environment" et "use_url_rewriting" positionnés
+ *) Ajout d'une classe Log permettant de logguer les erreurs
+ *) Ajout d'une classe Url permettant de mieux gérer les urls internes au site
+ *) Les contrôleurs devront désormais se finir par le mot "Controller" (ex. "indexController")
+ *) Amélioration de la classe Error - gestion plus fine
+ *) Les classes Bootstrap, Controller et Route sont désormais des singletons
+ 
+2011-09-11 Changes with MINZ 0.3.0 :
+
+ *) Ajout d'une première version de classe Route pour gérer des urls spécifiques
+ *) Ajout d'un AppBootstrap pour automatiser les actions redondantes dans chaque controller
+ 
+2011-08-26 Changes with MINZ 0.2.0 :
+
+ *) Correction nom application dans les commentaires
+ *) Ajout de commentaires dans la librairie
+ *) Ajout de la classe Paginator pour faciliter la pagination
+ *) Gestion des magic_quotes : si activé sur serveur, on les "désactive"
+ *) Création d'une liste de "features"
+ 
+2011-08-12 Changes with MINZ 0.1.0 :
+
+ *) Première version de MINZ
+
+
+========
+AUTHORS
+Main Developer - Marien Fressinaud <contact [AT] marienfressinaud.fr><marienfressinaud [AT] gmail.com> <JID: marienfressinaud [AT] jappix.com>
+http://marienfressinaud.fr
+License https://www.gnu.org/licenses/ AGPL 3
+
+XMPPHP library - Nathanael C. Fritz <JID: fritzy [AT] netflint.net> - Stephan Wentz <JID: stephan [AT] jabber.wentz.it> - Michael Garvin <JID: gar [AT] netflint.net>
+https://code.google.com/p/xmpphp/
+License https://www.gnu.org/licenses/old-licenses/gpl-2.0.html GPL 2
+
+OpenID library - JanRain, Inc. <openid [AT] janrain.com>
+janrain.com
+License http://www.apache.org/licenses/LICENSE-2.0 Apache

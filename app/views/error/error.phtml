@@ -1,0 +1,15 @@
+<h1><?php echo $this->translate->t('an error occured'); ?></h1>
+
+<?php if(isset($this->type)) :?>
+<h2><?php echo $this->type; ?></h2>
+<?php endif; ?>
+
+<?php if(!empty($this->logs)): ?>
+<ul>
+    <?php foreach($this->logs as $log): ?>
+    <li><?php echo $log; ?></li>
+    <?php endforeach; ?>
+</ul>
+<?php endif; ?>
+
+<p><a href="<?php echo $this->url->display(History::back(0)); ?>"><?php echo $this->translate->t('go back'); ?></a></p>

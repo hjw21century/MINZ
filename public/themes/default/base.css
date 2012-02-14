@@ -1,0 +1,93 @@
+/** 
+ * MINZ - Copyright 2011 Marien Fressinaud
+ * Sous licence AGPL3 <http://www.gnu.org/licenses/>
+*/
+a {
+	color: #365F97; text-decoration: none;
+	}
+/*** FORMULAIRES ***/
+form {
+	width: 500px; margin: auto;
+	}
+	form p {
+		text-align: left;
+		}
+	fieldset {
+		background: #f0f0f0; border-radius: 5px; border: 1px solid #aaa;
+		}
+		legend {
+			font-size: 130%; color: #aaa; font-weight: bold;
+			}
+	label {
+		display: inline-block; width: 200px; padding: 0 10px 0 0;
+		font-weight: bold; text-align: right; vertical-align: middle;
+		}
+	input, textarea {
+		width: 240px; height: 25px; padding: 3px; margin: 5px 0;
+		background: #fff; border: 1px solid #aaa; border-radius: 2px; line-height: 25px;
+		}
+		input[type="submit"] {
+			height: 30px;
+			background: #ccd; font-weight: bold; box-shadow: 1px 1px 2px #CFCFCF; cursor: pointer;
+			}
+		input[type="reset"] {
+			height: 30px;
+			cursor: pointer;
+			}
+	textarea {
+		display: block; width: 500px; height: 150px; line-height: 150%;
+		}
+	
+body {
+	background: #fafafa; color: #222; font-family: Cantarell,"Lucida Grande","Lucida Sans Unicode",Verdana,Arial,sans-serif; font-size: 95%; text-align: justify;
+	}
+	#header, #global {
+		width: 500px; margin: 10px auto;
+		}
+		#header p.switchLangue {
+			font-size: 90%; color: #666;
+			}
+		#header h1 {
+			margin: 0; padding: 5px 0 5px 20px;
+			background: #fff; border: 1px solid #ccc; border-radius: 20px; font-size: 140%;
+			}
+			#header h1 a {
+				color: #222;
+				}
+
+.ok, .error {
+	width: 90%; margin: 15px auto 10px; padding: 10px 5px;
+	color: #fff; border: 1px solid #aaa; font-size: 90%; font-weight: bold; text-align: center; border-radius: 2px; box-shadow: 2px 2px 5px #333333;
+	}
+.ok {
+	background: #8FD900;
+	}
+.error {
+	background: #E95F00;
+	}
+	
+/*** PAGINATION ***/
+.pagination {
+	margin: 0;
+	list-style: none; text-align: center; font-size: 100%;
+	}
+	.pagination li {
+		display: inline-block; margin: 0 5px;
+		}
+		.pagination li.pager-current {
+			font-weight: bold;
+			}
+/*** LOGS ***/
+.logs {
+	border: 1px solid #aaa; background: #eee;
+	}
+	.logs .log {
+		width: 98%; margin: 0; padding: 5px 1%; overflow: auto;
+		background: #fafafa; border: none; border-bottom: 1px solid #999; color: #333; font-weight: normal; box-shadow: none; text-align: left;
+		}
+		.logs .log .date {
+			display: block;
+			}
+	.logs .log.error { background: #fcc; }
+	.logs .log.warning { background: #ffc; }
+	.logs .log.notice { background: #ccf; }
