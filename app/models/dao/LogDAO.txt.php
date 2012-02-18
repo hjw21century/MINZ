@@ -12,7 +12,7 @@ class LogDAO extends Model_txt {
         $logs = array();
 
         $i=0;
-        while( ($line = $this->read_line()) !== false && $i<3000) {
+        while( ($line = $this->readLine()) !== false && $i<3000) {
             $logs[$i]->dateLog = preg_replace("'\[(.*?)\] \[(.*?)\] (.*?)'U", "\\1", $line);
             $logs[$i]->levelLog = preg_replace("'\[(.*?)\] \[(.*?)\] (.*?)'U", "\\2", $line);
             $logs[$i]->informationLog = preg_replace("'\[(.*?)\] \[(.*?)\] (.*?)'U", "\\3", $line);
