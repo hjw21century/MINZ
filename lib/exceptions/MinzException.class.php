@@ -16,5 +16,10 @@ class MinzException extends Exception {
 	}
 }
 
+class ConfigurationException extends MinzException {}
 class FileNotExistException extends MinzException {}
 class SQLConnectionException extends MinzException {}
+class ControllerNotExistException extends MinzException {}
+class ControllerNotControllerException extends MinzException {}
+class ActionException extends MinzException {}
+class SyntaxException extends MinzException {}

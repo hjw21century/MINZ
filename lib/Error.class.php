@@ -52,12 +52,14 @@ class Error {
         }
         
         // on relance le Bootstrap avec le controller et l'action spécifiés
+        /* j'aime pas
         $route = Route::getInstance();
         $route->_controller($controller);
         $route->_action($action);
         
         $bootstrap = Bootstrap::getInstance(array());
         $bootstrap->run();
+        */
         
         // on stoppe le chargement de la page
         exit();

@@ -23,7 +23,7 @@ class Model_txt {
 		$this->file = fopen($nameFile, $mode);
 		
 		if(!isset($this->file)) {
-			throw new FileNotExistException('File not exist : '.$nameFile, MinzException::WARNING);
+			throw new FileNotExistException('File doesn\'t exist : '.$nameFile, MinzException::WARNING);
 		}
 	}
 	

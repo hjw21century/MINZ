@@ -62,13 +62,18 @@ class Configuration {
     /**
      * Permet de récupérer l'instance de Configuration
      * @param $params tableau des paramètres utiles :
-     *                  config_file = chemin vers le fichier de conf
+     *                  configFile = chemin vers le fichier de conf
      *                                (peut être à null si déjà instancié)
      * @return l'instance de Configuration
      */
-	public static function getInstance($config_file) {
-		if( is_null(self::$instance) )
-		    self::$instance = new Configuration($config_file);
+	public static function getInstance($configFile) {
+		if(is_null(self::$instance)) {
+		    try {
+		    	self::$instance = new Configuration($configFile);
+	    	} catch(ConfigurationException $e) {
+	    		throw $e;
+    		}
+		}
 		return self::$instance;
 	}
 	
@@ -77,15 +82,18 @@ class Configuration {
      * Initialise les variables de configuration
      * Attention : private car singleton
      * @param $params tableau des paramètres utiles :
-     *                  config_file = chemin vers le fichier de conf
+     *                  configFile = chemin vers le fichier de conf
      */
-    private function __construct($config_file) {
-		if(file_exists($config_file)) {
-			if(!$this->parseIniFile($config_file)
-			&& !$this->parseConstantesFile($config_file)) {
-				// si on n'arrive pas à récupérer les infos nécessaires
-				Log::record('Le fichier de configuration est mal construit. Attention, les variables "environment" et "use_url_rewriting" sont obligatoires', Log::WARNING);
+    private function __construct($configFile) {
+		if(file_exists($configFile)) {
+
+			if(!$this->parseIniFile($configFile)
+			&& !$this->parseConstantesFile($configFile)) {
+				throw new ConfigurationException('Configuration File is incorrectly formatted. "environment" and "use_url_rewriting" are required', MinzException::ERROR);
 			}
+
+		} else {
+			throw new FileNotExistException('File doesn\'t exist : '.$configFile, MinzException::ERROR);
 		}
 	}
 	
@@ -116,7 +124,7 @@ class Configuration {
 	        case 'silent': self::$environment = Configuration::SILENT; break;
 	        case 'production': self::$environment = Configuration::PRODUCTION; break;
 	        case 'development': self::$environment = Configuration::DEVELOPMENT; break;
-	        default: Log::record('La valeur de la variable "environment" n\'est pas prise en charge : '.$env.'. Valeurs prises en charges : silent / production / development', Log::WARNING);
+	        default: self::$environment = Configuration::PRODUCTION;
 	    }
 	}
 	private function _maxHistoryUrls($max) {
@@ -129,19 +137,23 @@ class Configuration {
 	
     /**
      * Parse un fichier de config de type "constantes"
-     * @param $config_file chemin du fichier de config
+     * @param $configFile chemin du fichier de config
      * @return true si tout s'est bien passé, false sinon
      */
-	private function parseConstantesFile($config_file) {
-		require_once($config_file);
+	private function parseConstantesFile($configFile) {
+		require_once($configFile);
 		
 		// ENVIRONMENT et USE_URL_REWRITING sont des variables indispensables
-		if(defined('ENVIRONMENT'))
+		if(defined('ENVIRONMENT')) {
 		    $this->_environment(ENVIRONMENT);
-		else return false;
-		if(defined('USE_URL_REWRITING'))
+		} else {
+			return false;
+		}
+		if(defined('USE_URL_REWRITING')) {
 		    self::$use_url_rewriting = USE_URL_REWRITING;
-		else return false;
+		} else {
+			return false;
+		}
 		
 		if(defined('DOMAIN')) self::$domain = DOMAIN;
 		if(defined('TITLE')) self::$title = TITLE;
@@ -154,32 +166,42 @@ class Configuration {
 		if(defined('DB_PASSWORD')) self::$db['password'] = DB_PASSWORD;
 		if(defined('DB_BASE')) self::$db['base'] = DB_BASE;
 		
-		return true; // tout s'est bien passé
+		return true;
 	}
 	
 	/**
      * Parse un fichier de config de type ".ini"
-     * @param $config_file chemin du fichier de config
+     * @param $configFile chemin du fichier de config
      * @return true si tout s'est bien passé, false sinon
      */
-	private function parseIniFile($config_file) {
-		$ini_array = @parse_ini_file($config_file, true);
+	private function parseIniFile($configFile) {
+		$ini_array = @parse_ini_file($configFile, true);
 		
 		// récupère la partie "general" du fichier .ini (indispensable)
-		if(isset($ini_array['general'])) $general = $ini_array['general'];
-		else return false;
+		if(isset($ini_array['general'])) {
+			$general = $ini_array['general'];
+		} else {
+			return false;
+		}
 		
 		// préparation si utilisation de la base de données
 		$db = false;
-		if(isset($ini_array['db'])) $db = $ini_array['db'];
+		if(isset($ini_array['db'])) {
+			$db = $ini_array['db'];
+		}
 		
 		// environment et use_url_rewriting sont des variables indispensables
-		if(isset($general['environment']))
+		if(isset($general['environment'])) {
 		    $this->_environment($general['environment']);
-		else return false;
-		if(isset($general['use_url_rewriting']))
+		} else {
+			return false;
+		}
+		
+		if(isset($general['use_url_rewriting'])) {
 		    self::$use_url_rewriting = $general['use_url_rewriting'];
-		else return false;
+		} else {
+			return false;
+		}
 		
 		if(isset($general['domain'])) self::$domain = $general['domain'];
 		if(isset($general['title'])) self::$title = $general['title'];
@@ -189,10 +211,12 @@ class Configuration {
 		
 		if($db) {
 			// il est nécessaire d'avoir défini ces variables pour la BD
-			if( !isset($db['host'])
-			 || !isset($db['user'])
-			 || !isset($db['password'])
-			 || !isset($db['base']) ) return false;
+			if(!isset($db['host'])
+			|| !isset($db['user'])
+			|| !isset($db['password'])
+			|| !isset($db['base']) ) {
+				return false;
+			}
 			
 			self::$db['host'] = $db['host'];
 			self::$db['user'] = $db['user'];
@@ -200,6 +224,6 @@ class Configuration {
 			self::$db['base'] = $db['base'];
 		}
 		
-		return true; // tout s'est bien passé
+		return true;
 	}
 }

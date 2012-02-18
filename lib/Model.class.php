@@ -4,6 +4,7 @@
  * Sous licence AGPL3 <http://www.gnu.org/licenses/>
 */
 
+// inclure ici ?
 include_once('dao/Model_sql.class.php');
 include_once('dao/Model_txt.class.php');
 include_once('dao/Model_array.class.php');
