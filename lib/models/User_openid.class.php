@@ -62,19 +62,19 @@ class User_OpenId extends Model {
 	}
 	
 	public function logout() {
-        if($this->isLogged()) {
-            Session::unset_session();
-        }
+		if($this->isLogged()) {
+			Session::unset_session();
+		}
 	}
 
 	public function isLogged() {
-	    $id = Session::param('id');
-	    
-	    $logged = false;
-	    if(!empty($id) && $id == $this->id) {
-            $logged = true;
-        }
-	    
+		$id = Session::param('id');
+		
+		$logged = false;
+		if(!empty($id) && $id == $this->id) {
+			$logged = true;
+		}
+		
 		return $logged;
 	}
 }

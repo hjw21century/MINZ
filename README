@@ -1,6 +1,6 @@
 ========
 TODO v1
- *) Améliorer fonctionnement Exceptions
+ *) Améliorer fonctionnement Exceptions : DONE
  *) Création système de cache
  *) Amélioration classe Error
  *) Revoir système de Logs

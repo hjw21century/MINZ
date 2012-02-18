@@ -31,7 +31,7 @@ class User_XMPP extends Model implements UserInterface {
 	
 	
 	public function login() {
-	    $conn = new XMPPHP_XMPP($this->jid['host'], $this->jid['port'], $this->jid['user'], $this->password, $this->jid['ressource'], $this->jid['domain']);
+		$conn = new XMPPHP_XMPP($this->jid['host'], $this->jid['port'], $this->jid['user'], $this->password, $this->jid['ressource'], $this->jid['domain']);
 		
 		try {
 			// Connexion XMPP
@@ -40,27 +40,27 @@ class User_XMPP extends Model implements UserInterface {
 			$conn->disconnect();
 		
 			// Récupération des informations du compte
-		    Session::_param('jid', $this->jid['jid']);
+			Session::_param('jid', $this->jid['jid']);
 		} catch(XMPPHP_Exception $e) {
 			throw new XMPPException('JID '.$this->jid.' mal formé', MinzException::WARNING);
 		}
 	}
 	
 	public function logout() {
-        if($this->isLogged()) {
-            Session::unset_session();
-        }
+		if($this->isLogged()) {
+			Session::unset_session();
+		}
 	}
 
 	public function isLogged() {
-	    $jid = Session::param('jid');
-	    
-	    if(!$jid) {
-	        $logged = false;
-        } else {
-            $logged = true;
-        }
-	    
+		$jid = Session::param('jid');
+		
+		if(!$jid) {
+			$logged = false;
+		} else {
+			$logged = true;
+		}
+		
 		return $logged;
 	}
 	
