@@ -46,20 +46,17 @@ class Error {
             case 503:
                 header("HTTP/1.0 503 Service Unavailable"); 
                 break;
-                
             default :
                 Log::record('Type d\'erreur non pris en charge : '.$type, Log::NOTICE);
         }
         
         // on relance le Bootstrap avec le controller et l'action spécifiés
-        /* j'aime pas
         $route = Route::getInstance();
         $route->_controller($controller);
         $route->_action($action);
         
         $bootstrap = Bootstrap::getInstance(array());
         $bootstrap->run();
-        */
         
         // on stoppe le chargement de la page
         exit();

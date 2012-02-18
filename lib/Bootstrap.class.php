@@ -130,7 +130,11 @@ class Bootstrap {
 				$this->route->run();
 			} catch(RouteNotFoundException $e) {
 				Log::record($e->getMessage(), Log::ERROR);
-				$this->killApp();
+				$url = 'http://'.$_SERVER['HTTP_HOST'];
+				if(isset($_SERVER['REQUEST_URI'])) {
+					$url .= $_SERVER['REQUEST_URI'];
+				}
+				Error::error(404, array('error'=>array('Page Not Found : '.$url)));
 			}
 		}
 		

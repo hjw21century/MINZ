@@ -22,4 +22,5 @@ class SQLConnectionException extends MinzException {}
 class ControllerNotExistException extends MinzException {}
 class ControllerNotControllerException extends MinzException {}
 class ActionException extends MinzException {}
+class RouteNotFoundException extends MinzException {}
 class SyntaxException extends MinzException {}

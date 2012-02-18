@@ -1,18 +1,17 @@
 <div id="header">
-    <p class="switchLangue">
-        <?php if(Configuration::language()=='fr') { ?>
-        <?php echo $this->translate->t('En Français'); ?> - 
-        <a href="<?php echo $this->url->display(array('a'=>'changeLanguage', 'params'=>array('l'=>'en'))); ?>">
-            <?php echo $this->translate->t('English'); ?>
-        </a>
-        <?php } else { ?>
-        <?php echo $this->translate->t('In English'); ?> - 
-        <a href="<?php echo $this->url->display(array('a'=>'changeLanguage', 'params'=>array('l'=>'fr'))); ?>">
-            <?php echo $this->translate->t('Français'); ?>
-        </a>
-        <?php } ?>
-        - <a href="<?php echo $this->url->display(array('c'=>'log')); ?>">Logs</a>
-    </p>
-    
-    <h1><a href="<?php echo $this->url->display();?>"><?php echo $this->title; ?></a></h1>
+	<p class="switchLangue">
+		<?php if(Configuration::language()=='fr') { ?>
+			<?php echo $this->translate->t('En Français'); ?> - 
+			<a href="<?php echo $this->url->display(array('a'=>'changeLanguage', 'params'=>array('l'=>'en'))); ?>">
+			<?php echo $this->translate->t('English'); ?>
+			</a>
+		<?php } else { ?>
+			<?php echo $this->translate->t('In English'); ?> - 
+			<a href="<?php echo $this->url->display(array('a'=>'changeLanguage', 'params'=>array('l'=>'fr'))); ?>">
+			<?php echo $this->translate->t('Français'); ?>
+			</a>
+		<?php } ?>
+		- <a href="<?php echo $this->url->display(array('c'=>'log')); ?>">Logs</a>
+	</p>
+	<h1><a href="<?php echo $this->url->display();?>"><?php echo $this->title; ?></a></h1>
 </div>

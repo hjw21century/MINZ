@@ -116,7 +116,7 @@ class Route {
 					$txt = ' (previous page : '.$_SERVER['HTTP_REFERER'].')';
 				}
 				
-				throw new RouteNotFoundException($url.' route does\'nt exist'.$txt, MinzException::ERROR);
+				throw new RouteNotFoundException('Route does\'nt exist : '.$url.$txt, MinzException::ERROR);
 			}
 		}
 	}
