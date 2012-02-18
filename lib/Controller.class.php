@@ -63,18 +63,28 @@ class Controller {
 	 * Permet d'exécuter le contrôleur
 	 */
 	public function handle() {
-		// l'action existe dans le contrôleur (héritage)
-		if(is_callable(array($this, self::$action.'Action'))) {
+		$cache = new Cache();
+		if(Cache::isEnabled() && !$cache->expired()) {
+			$cache->render();
+		} elseif(is_callable(array($this, self::$action.'Action'))) {
 			$this->firstAction();
 			call_user_func(array($this, self::$action.'Action'));
 			$this->lastAction();
 			
 			// Affiche la vue (avec layout ou pas selon ce qui est demandé)
+			ob_start();
 			if($this->view->has_layout()) {
 				$this->view->renderWithLayout();
 			} else {
 				$this->view->render();
 			}
+			$html = ob_get_clean();
+			
+			if(Cache::isEnabled() && $cache->expired()) {
+				$cache->cache($html);
+			}
+			
+			echo $html;
 		} else {
 			throw new ActionException('Action cannot be called : '.self::$action.'Action', MinzException::ERROR);
 		}

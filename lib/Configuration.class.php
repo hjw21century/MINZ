@@ -9,23 +9,23 @@
  * C'est un singleton
  */
 class Configuration {
-    /**
-     * $instance représente l'instance de Configuration
-     */
+	/**
+	 * $instance représente l'instance de Configuration
+	 */
 	private static $instance = null;
 	
-    /**
-     * VERSION est la version actuelle de MINZ
-     */
+	/**
+	 * VERSION est la version actuelle de MINZ
+	 */
 	const VERSION = '0.5.0';
 	
 	/**
-     * valeurs possibles pour l'"environment"
-     * SILENT rend l'application muette (pas de log)
-     * PRODUCTION est recommandée pour une appli en production
-     *            (log les erreurs critiques)
-     * DEVELOPMENT log toutes les erreurs
-     */
+	 * valeurs possibles pour l'"environment"
+	 * SILENT rend l'application muette (pas de log)
+	 * PRODUCTION est recommandée pour une appli en production
+	 *			(log les erreurs critiques)
+	 * DEVELOPMENT log toutes les erreurs
+	 */
 	const SILENT = 0;
 	const PRODUCTION = 1;
 	const DEVELOPMENT = 2;
@@ -38,10 +38,10 @@ class Configuration {
 	 * $title le nom de l'application
 	 * $layout indique si on utilise un layout (false par défaut)
 	 * $db paramètres pour la base de données (tableau)
-	 *      - host le serveur de la base
-	 *      - user nom d'utilisateur
-	 *      - password mot de passe de l'utilisateur
-	 *      - base le nom de la base de données
+	 *	  - host le serveur de la base
+	 *	  - user nom d'utilisateur
+	 *	  - password mot de passe de l'utilisateur
+	 *	  - base le nom de la base de données
 	 */
 	private static $environment = Configuration::PRODUCTION;
 	private static $use_url_rewriting = false;
@@ -50,6 +50,8 @@ class Configuration {
 	private static $layout = false;
 	private static $language = 'en';
 	private static $maxHistoryUrls = 5;
+	private static $cacheEnabled = true;
+	private static $delayCache = 3600;
 	
 	private static $db = array(
 							'host' => false,
@@ -59,32 +61,32 @@ class Configuration {
 						);
 	
 	
-    /**
-     * Permet de récupérer l'instance de Configuration
-     * @param $params tableau des paramètres utiles :
-     *                  configFile = chemin vers le fichier de conf
-     *                                (peut être à null si déjà instancié)
-     * @return l'instance de Configuration
-     */
+	/**
+	 * Permet de récupérer l'instance de Configuration
+	 * @param $params tableau des paramètres utiles :
+	 *				  configFile = chemin vers le fichier de conf
+	 *								(peut être à null si déjà instancié)
+	 * @return l'instance de Configuration
+	 */
 	public static function getInstance($configFile) {
 		if(is_null(self::$instance)) {
-		    try {
-		    	self::$instance = new Configuration($configFile);
-	    	} catch(ConfigurationException $e) {
-	    		throw $e;
-    		}
+			try {
+				self::$instance = new Configuration($configFile);
+			} catch(ConfigurationException $e) {
+				throw $e;
+			}
 		}
 		return self::$instance;
 	}
 	
 	
-    /**
-     * Initialise les variables de configuration
-     * Attention : private car singleton
-     * @param $params tableau des paramètres utiles :
-     *                  configFile = chemin vers le fichier de conf
-     */
-    private function __construct($configFile) {
+	/**
+	 * Initialise les variables de configuration
+	 * Attention : private car singleton
+	 * @param $params tableau des paramètres utiles :
+	 *				  configFile = chemin vers le fichier de conf
+	 */
+	private function __construct($configFile) {
 		if(file_exists($configFile)) {
 
 			if(!$this->parseIniFile($configFile)
@@ -105,52 +107,52 @@ class Configuration {
 	public static function use_url_rewriting() { return self::$use_url_rewriting; }
 	public static function data_base() { return self::$db; }
 	public static function language() {
-	    $l = self::$language;
-	    
-	    $l_session = Session::param('language');
-	    if($l_session) {
-	        $l = $l_session;
-	    }
-	    
-	    return $l;
-    }
-    public static function maxHistoryUrls() {
-        return self::$maxHistoryUrls;
-    }
+		$l = self::$language;
+		
+		$l_session = Session::param('language');
+		if($l_session) {
+			$l = $l_session;
+		}
+		
+		return $l;
+	}
+	public static function maxHistoryUrls() { return self::$maxHistoryUrls; }
+	public static function cacheEnabled() { return self::$cacheEnabled; }
+	public static function delayCache() { return self::$delayCache; }
 	
 	// SETTEURS
 	private function _environment($env) {
-	    switch($env) {
-	        case 'silent': self::$environment = Configuration::SILENT; break;
-	        case 'production': self::$environment = Configuration::PRODUCTION; break;
-	        case 'development': self::$environment = Configuration::DEVELOPMENT; break;
-	        default: self::$environment = Configuration::PRODUCTION;
-	    }
+		switch($env) {
+			case 'silent': self::$environment = Configuration::SILENT; break;
+			case 'production': self::$environment = Configuration::PRODUCTION; break;
+			case 'development': self::$environment = Configuration::DEVELOPMENT; break;
+			default: self::$environment = Configuration::PRODUCTION;
+		}
 	}
 	private function _maxHistoryUrls($max) {
-	    if($max<2) {
-	        $max = 2;
-	    }
-	    self::$maxHistoryUrls = $max;
+		if($max<2) {
+			$max = 2;
+		}
+		self::$maxHistoryUrls = $max;
 	}
 	
 	
-    /**
-     * Parse un fichier de config de type "constantes"
-     * @param $configFile chemin du fichier de config
-     * @return true si tout s'est bien passé, false sinon
-     */
+	/**
+	 * Parse un fichier de config de type "constantes"
+	 * @param $configFile chemin du fichier de config
+	 * @return true si tout s'est bien passé, false sinon
+	 */
 	private function parseConstantesFile($configFile) {
 		require_once($configFile);
 		
 		// ENVIRONMENT et USE_URL_REWRITING sont des variables indispensables
 		if(defined('ENVIRONMENT')) {
-		    $this->_environment(ENVIRONMENT);
+			$this->_environment(ENVIRONMENT);
 		} else {
 			return false;
 		}
 		if(defined('USE_URL_REWRITING')) {
-		    self::$use_url_rewriting = USE_URL_REWRITING;
+			self::$use_url_rewriting = USE_URL_REWRITING;
 		} else {
 			return false;
 		}
@@ -160,6 +162,8 @@ class Configuration {
 		if(defined('LAYOUT')) self::$layout = LAYOUT;
 		if(defined('LANGUAGE')) self::$language = LANGUAGE;
 		if(defined('MAX_HISTORY_URLS')) $this->_maxHistoryUrls(MAX_HISTORY_URLS);
+		if(defined('CACHE_ENABLED')) self::$cacheEnabled = CACHE_ENABLED;
+		if(defined('DELAY_CACHE')) self::$delayCache = DELAY_CACHE;
 		
 		if(defined('DB_HOST')) self::$db['host'] = DB_HOST;
 		if(defined('DB_USER')) self::$db['user'] = DB_USER;
@@ -170,10 +174,10 @@ class Configuration {
 	}
 	
 	/**
-     * Parse un fichier de config de type ".ini"
-     * @param $configFile chemin du fichier de config
-     * @return true si tout s'est bien passé, false sinon
-     */
+	 * Parse un fichier de config de type ".ini"
+	 * @param $configFile chemin du fichier de config
+	 * @return true si tout s'est bien passé, false sinon
+	 */
 	private function parseIniFile($configFile) {
 		$ini_array = @parse_ini_file($configFile, true);
 		
@@ -192,13 +196,13 @@ class Configuration {
 		
 		// environment et use_url_rewriting sont des variables indispensables
 		if(isset($general['environment'])) {
-		    $this->_environment($general['environment']);
+			$this->_environment($general['environment']);
 		} else {
 			return false;
 		}
 		
 		if(isset($general['use_url_rewriting'])) {
-		    self::$use_url_rewriting = $general['use_url_rewriting'];
+			self::$use_url_rewriting = $general['use_url_rewriting'];
 		} else {
 			return false;
 		}
@@ -208,6 +212,8 @@ class Configuration {
 		if(isset($general['layout'])) self::$layout = $general['layout'];
 		if(isset($general['language'])) self::$language = $general['language'];
 		if(isset($general['max_history_urls'])) $this->_maxHistoryUrls($general['max_history_urls']);
+		if(isset($general['cache_enabled'])) self::$cacheEnabled = $general['cache_enabled'];
+		if(isset($general['delay_cache'])) self::$delayCache = $general['delay_cache'];
 		
 		if($db) {
 			// il est nécessaire d'avoir défini ces variables pour la BD

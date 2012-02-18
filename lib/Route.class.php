@@ -50,6 +50,7 @@ class Route {
 		if( is_null(self::$instance) ) {
 			self::$instance = new Route();
 		}
+		
 		return self::$instance;
 	}
 	

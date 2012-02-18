@@ -116,7 +116,7 @@ class View {
 	 * Inverse l'utilisation du layout (si on l'utilisait, on ne l'utilise plus et inversement)
 	 */
 	public function switchLayout() {
-	  $this->layout = !$this->layout;
+		$this->layout = !$this->layout;
 	}
 
 

@@ -104,6 +104,7 @@ class Bootstrap {
 		require('Helper.class.php');
 		require('Translate.class.php');
 		require('Paginator.class.php');
+		require('Cache.class.php');
 		require('View.class.php');
 		
 		// inclusion du Bootstrap utilisateur
