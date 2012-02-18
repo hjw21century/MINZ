@@ -1,31 +1,32 @@
-Une liste des fonctionnalités que j'aimerais ajouter :
-    *) Améliorer la classe Model
-    *) Des exceptions ! --> à continuer
-    *) De la documentation /!\
-    *) Un système de cache
-    
-Je pourrais espérer une version 1.0.0 lorsque ceci aura été implémenté ;)
+========
+TODO v1
+ *) Améliorer fonctionnement Exceptions
+ *) Création système de cache
+ *) Amélioration classe Error
+ *) Revoir système de Logs
+ *) Correction bugs
+ *) Documentation
 
 
 ========
 REQUIS
-* Un serveur Apache
-* PHP Version 5 ou plus
-* Avec l'url rewriting activé, c'est mieux, mais ça fonctionne très bien sans ;)
+ *) Un serveur Apache
+ *) PHP Version 5 ou plus
+ *) Avec l'url rewriting activé, c'est mieux, mais ça fonctionne très bien sans ;)
 
 
 ========
 INSTALLATION
-1. Décompresser l'archive et la placer sur le serveur.
-2. Vérifier que les droits en lecture / écriture sont mis sur le répertoire de logs
+ 1) Décompresser l'archive et la placer sur le serveur.
+ 2) Vérifier que les droits en lecture / écriture sont mis sur le répertoire de logs
 
 [Dans /app/configuration/application.ini]
-2. En fonction de si l'url_rewriting est activé sur votre serveur, modifiez (ou non) le paramètre use_url_rewriting.
-3. Modifier le nom de domaine. Si le chemin pour y accéder est quelque chose du genre : http://votre-domaine.fr/public, alors pensez à ajouter le /public
+ 2) En fonction de si l'url_rewriting est activé sur votre serveur, modifiez (ou non) le paramètre use_url_rewriting.
+ 3) Modifier le nom de domaine. Si le chemin pour y accéder est quelque chose du genre : http://votre-domaine.fr/public, alors pensez à ajouter le /public
 
 [si ça ne fonctionne pas]
-4. Pensez à regarder les logs PHP et les logs de l'application (encore que les logs PHP seront beaucoup plus complets)
-5. Si vraiment ça ne marche pas, contactez-moi (contact@marienfressinaud.fr) et je pourrais peut-être vous aider :)
+ 4) Pensez à regarder les logs PHP et les logs de l'application (encore que les logs PHP seront beaucoup plus complets)
+ 5) Si vraiment ça ne marche pas, contactez-moi (contact@marienfressinaud.fr) et je pourrais peut-être vous aider :)
 
 
 ========
@@ -42,7 +43,6 @@ CHANGELOG
  *) Correction divers bugs
  
 2011-10-30 Changes with MINZ 0.4.0 :
-
  *) Suppression de constantes inutiles dans le index.php
  *) Renommage du fichier /app/Bootstrap.php en /app/AppBootstrap.php
  *) Amélioration du routage des Url (gestion des urls dynamiques)
@@ -55,12 +55,10 @@ CHANGELOG
  *) Les classes Bootstrap, Controller et Route sont désormais des singletons
  
 2011-09-11 Changes with MINZ 0.3.0 :
-
  *) Ajout d'une première version de classe Route pour gérer des urls spécifiques
  *) Ajout d'un AppBootstrap pour automatiser les actions redondantes dans chaque controller
  
 2011-08-26 Changes with MINZ 0.2.0 :
-
  *) Correction nom application dans les commentaires
  *) Ajout de commentaires dans la librairie
  *) Ajout de la classe Paginator pour faciliter la pagination
@@ -68,7 +66,6 @@ CHANGELOG
  *) Création d'une liste de "features"
  
 2011-08-12 Changes with MINZ 0.1.0 :
-
  *) Première version de MINZ
 
 
