@@ -1,9 +1,5 @@
 ========
 TODO v1
- *) Améliorer fonctionnement Exceptions : DONE
- *) Création système de cache : DONE
- *) Amélioration classe Error : OK (voir pour la v2)
- *) Revoir système de Logs : OK (voir pour la v2)
  *) Documentation
  *) Correction bugs
 
@@ -18,7 +14,8 @@ REQUIS
 ========
 INSTALLATION
  1) Décompresser l'archive et la placer sur le serveur.
- 2) Vérifier que les droits en lecture / écriture sont mis sur le répertoire de logs
+ 2) Vérifier que les droits en lecture / écriture sont mis sur le répertoire de logs et de cache.
+ 3) Faire les modifications nécessaires dans app/configuration/application.ini
 
 [Dans /app/configuration/application.ini]
  2) En fonction de si l'url_rewriting est activé sur votre serveur, modifiez (ou non) le paramètre use_url_rewriting.
@@ -31,6 +28,12 @@ INSTALLATION
 
 ========
 CHANGELOG
+2012-02-18 Changes with MINZ 1.0.0 :
+ *) Ajout de la classe Cache
+ *) Meilleure utilisation des Exception à travers la librairie
+ *) Mise à jour des Model_{array|sql|txt}
+ *) Code reformaté
+ 
 2012-02-12 Changes with MINZ 0.5.0 :
  *) Ajout d'un paramètre de configuration indiquant la langue affichée actuellement par le site
  *) Ajout d'une classe Translate permettant de faciliter l'internationalisation du site

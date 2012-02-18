@@ -17,7 +17,7 @@ class Configuration {
 	/**
 	 * VERSION est la version actuelle de MINZ
 	 */
-	const VERSION = '0.5.0';
+	const VERSION = '1.0.0 alpha';
 	
 	/**
 	 * valeurs possibles pour l'"environment"
