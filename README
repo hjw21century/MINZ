@@ -2,8 +2,8 @@
 TODO v1
  *) Améliorer fonctionnement Exceptions : DONE
  *) Création système de cache
- *) Amélioration classe Error
- *) Revoir système de Logs
+ *) Amélioration classe Error : OK (voir pour la v2)
+ *) Revoir système de Logs : OK (voir pour la v2)
  *) Correction bugs
  *) Documentation
 
