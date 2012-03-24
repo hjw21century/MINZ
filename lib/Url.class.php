@@ -33,15 +33,17 @@ class Url {
 			// l'url n'a pas pu être rewritée
 			// (non spécifiée dans routes.php ou url_rewriting désactivé)
 			// on construit alors l'url de façon plus standard (?c=X&a=Y...)
-			if(isset($url['c']) && $url['c']!=$route->defaultController())
+			if(isset($url['c']) && $url['c']!=$route->defaultController()) {
 				$url_string .= $this->character_param().'c='.$url['c'];
-			if(isset($url['a']) && $url['a']!=$route->defaultAction())
+			}
+			if(isset($url['a']) && $url['a']!=$route->defaultAction()) {
 				$url_string .= $this->character_param().'a='.$url['a'];
-			if(isset($url['params'])):
+			}
+			if(isset($url['params'])) {
 				foreach($url['params'] as $key=>$param) {
 					$url_string .= $this->character_param().$key.'='.$param;
 				}
-			endif;
+			}
 			$this->even_character = false;
 		endif;
 		

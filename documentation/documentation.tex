@@ -27,6 +27,7 @@
   \lstset{
     frame=trBL,
     language=PHP,
+    numbers=left,
     basicstyle=\ttfamily,
     keywordstyle=\color[rgb]{0,0,1},
     commentstyle=\color[rgb]{0.133,0.545,0.133},
@@ -41,6 +42,7 @@
   \lstset{
     frame=trBL,
     language=HTML,
+    numbers=left,
     basicstyle=\ttfamily,
     keywordstyle=\color[rgb]{0,0,1},
     commentstyle=\color[rgb]{0.133,0.545,0.133},
@@ -60,6 +62,20 @@
     showspaces=false,
     showstringspaces=false,
     morekeywords={RewriteEngine, RewriteCond, RewriteRule},
+    breaklines=true,
+  }
+}{}
+\lstnewenvironment{ini}{
+  \lstset{
+    frame=trBL,
+    language=HTML,
+    basicstyle=\ttfamily,
+    keywordstyle=\color[rgb]{0,0,1},
+    commentstyle=\color[rgb]{0.133,0.545,0.133},
+    stringstyle=\color[rgb]{0.627,0.126,0.941},
+    showspaces=false,
+    showstringspaces=false,
+    morecomment=[l]{;},
     breaklines=true,
   }
 }{}
@@ -136,12 +152,12 @@ Et c'est tout ce que je préconise pour pouvoir utiliser le framework, soit des 
 
 Passons à l'installation. Là encore, c'est assez simple. Pour le moment, vous pouvez trouver le code complet sur la page GitHub dédiée :\\ \url{https://github.com/marienfressinaud/MINZ}\\
 
-Une fois les sources téléchargées, il ne vous reste plus qu'à décompresser l'archive sur votre serveur. Assurez-vous que votre nom de domaine pointe sur le répertoire \texttt{public} et modifiez le nom de domaine dans le fichier de configuration (\texttt{/app/configuration/application.ini}). Rendez-vous sur votre site à partir de votre navigateur, et vous devriez voir apparaître l'application par défaut de MINZ ! Félicitations.\\
+Une fois les sources téléchargées, il ne vous reste plus qu'à décompresser l'archive sur votre serveur. Assurez-vous que votre nom de domaine pointe sur le répertoire \texttt{public} et modifiez le nom de domaine dans le fichier de configuration (/app/configuration/application.ini). Rendez-vous sur votre site à partir de votre navigateur, et vous devriez voir apparaître l'application par défaut de MINZ ! Félicitations.\\
 
 \textcolor{grisFonce}{\textbf{Remarque} : il se peut que vous ne puissiez faire pointer votre nom de domaine au bon endroit. Deux solutions s'offrent à vous :
 \begin{enumerate}
   \item Coupez/collez le contenu de \texttt{public} dans le répertoire dans lequel pointe votre nom de domaine. Des modifications sont alors à porter aux constantes de chemins dans le contenu de \texttt{index.php}.
-  \item Dans le fichier de configuration, lors de la modification du nom de domaine, ajoutez le chemin complémentaire. Par exemple, vous aurez la ligne \texttt{domain = "http://www.minz.test/public"} si votre nom de domaine pointe sur le répertoire parent de \texttt{public}.
+  \item Dans le fichier de configuration, lors de la modification du nom de domaine, ajoutez le chemin complémentaire. Vous aurez la ligne \texttt{domain = "http://www.minz.test/public"} par exemple si votre nom de domaine pointe sur le répertoire parent de \texttt{public}.
 \end{enumerate}
 }
 
@@ -190,6 +206,50 @@ Le répertoire \texttt{app} regroupe à peu près tous les fichiers que vous aur
   \item le répertoire \texttt{layout} contient le squelette HTML du site.
   \item le fichier \texttt{AppBootstrap.php} est le Bootstrap de l'application lui permettant d'automatiser un certain nombre d'actions à son lancement.
 \end{itemize}
+
+\subsection{Configurer avant de démarrer}
+Une étape importante (et indispensable !) est la configuration. Minz propose deux modes de configuration : le fichier .ini et les constantes globales. Je ne peux que vous conseiller que d'utiliser le fichier .ini ! Voilà les différentes options configurables :
+\begin{ini}
+[general]
+; autres valeurs possibles : production / silent (obligatoire)
+environment = "development"
+; si vous souhaitez utiliser l'url rewriting (obligatoire)
+use_url_rewriting = true
+
+; le chemin d'acces a votre application Minz
+domain = "http://www.minz.test/public"
+; le nom de votre application
+title = "MINZ Is Not Zend"
+; si vous souhaitez utiliser le layout ou non
+layout = true
+; la langue par defaut de l'application
+language = "fr"
+; le nombre d'urls sauvegardees dans l'historique de Minz
+max_history_urls = 10
+; active ou non le cache
+cache_enabled = false
+
+; configuration de la base de donnees
+[db]
+host = "localhost"
+user = "john"
+password = "doe"
+base = "test"
+\end{ini}
+
+Chacune de ces informations sont accessibles à travers la classe \texttt{Configuration}. Les méthodes d'accès sont les suivantes :
+\begin{PHP}
+public static function environment()
+public static function domain()
+public static function title()
+public static function use_layout()
+public static function use_url_rewriting()
+public static function data_base()
+public static function language()
+public static function maxHistoryUrls()
+public static function cacheEnabled()
+public static function delayCache()
+\end{PHP}
 
 \subsection{Écrire un Controller}
 Tout d'abord, la norme pour les fichiers de contrôleurs veut que ceux-ci se trouvent dans le répertoire \texttt{/app/controllers} et que leur nom soit de la forme \texttt{nomController} (où \texttt{Controller} est commun à tout contrôleur). Attention à ce que la casse (majuscule/minuscule) corresponde entre le nom de fichier, le paramètre \texttt{\$\_GET['c']} de l'URL et le nom de classe.\\
@@ -283,13 +343,14 @@ class UserDAO extends Model_sql {
     $res = $stm->fetchAll(PDO::FETCH_CLASS);
     
     if(isset($res[0])) {
-      return $res[0];%$
+      return $res[0];
     } else {
       return false;
     }
   }
 }
 \end{PHP}
+%$
 
 Notre problème ici est que nous renvoyons une classe "non connue" par l'application et tirée de la base de données. Une bonne pratique est de "mapper" cet objet "BDD" avec un modèle déjà écrit afin que le modèle DAO ne renvoie que des modèles "User", codé plus haut. Pour cela nous allons utiliser un Helper :
 
@@ -357,16 +418,72 @@ La vue
     <?php if(!$this->user) { ?>
     <p class="error">L'utilisateur recherche n'existe pas.</p>
     <?php } else { ?>
-    <p class="infos">L'utilisateur <?php echo $this->user->username(); ?> possede l'adresse mail <?php echo $this->user->mail(); ?>.</p>%$
+    <p class="infos">L'utilisateur <?php echo $this->user->username(); ?> possede l'adresse mail <?php echo $this->user->mail(); ?>.</p>
     <?php } ?>
   </body>
 </html>
 \end{HTML}
+%$
 
+\subsection{Utilisation d'un layout}
+Dans l'exemple précédent, nous avons vu qu'il fallait mettre tout le code HTML dans la vue associée à l'url. Cependant, très vite, recopier l'ensemble de la structure HTML dans toutes les vues va devenir long et fastidieux. Et c'est sans compter la maintenance du code qui va vite devenir insupportable.
 
+Nous allons donc voir le fonctionnement du principe du Layout qui permet de définir une structure globale à l'application dans laquelle viendra se greffer simplement le code spécifique aux vues.\\
+
+Tout se passe maintenant dans le dossier /app/layout. Le fichier de base est \texttt{layout.phtml}. On peut y mettre ainsi tout le code HTML global à l'application. En se basant sur l'exemple précédent, nous aurons donc :
+\begin{HTML}
+<!DOCTYPE html>
+<html>
+  <head>
+    <?php echo $this->headTitle(); ?>
+    <?php echo $this->headStyle(); ?>
+  </head>
+  <body>
+    <h1><a href="<?php echo $this->url->display();?>"><?php echo $this->title; ?></a></h1>
+
+    <?php $this->render(); ?>
+  </body>
+</html>
+\end{HTML}
+%$
+
+La méthode \texttt{render()} associée à la classe View permet d'afficher la vue spécifique à l'url demandée.
+
+On aimerait aussi pouvoir mieux départager les différentes grandes parties de la structure. Ainsi ici le titre qui est global à toute l'application pourrait être séparé dans un fichier à part (\texttt{title.phtml} par exemple). Cela est possible grâce au principe des partials. Notre code ressemblera donc à ça maintenant : 
+
+/app/layout/layout.phtml
+\begin{HTML}
+<!DOCTYPE html>
+<html>
+  <head>
+    <?php echo $this->headTitle(); ?>
+    <?php echo $this->headStyle(); ?>
+  </head>
+  <body>
+    <?php $this->partial('title'); ?>
+
+    <?php $this->render(); ?>
+  </body>
+</html>
+\end{HTML}
+
+/app/layout/title.phtml
+\begin{HTML}
+<h1><a href="<?php echo $this->url->display();?>"><?php echo $this->title; ?></a></h1>
+\end{HTML}
+
+Et la vue
+\begin{HTML}
+<?php if(!$this->user) { ?>
+<p class="error">L'utilisateur recherche n'existe pas.</p>
+<?php } else { ?>
+<p class="infos">L'utilisateur <?php echo $this->user->username(); ?> possede l'adresse mail <?php echo $this->user->mail(); ?>.</p>
+<?php } ?>
+\end{HTML}
+%$
 
 \subsection{Utiliser l'AppBootstrap}
-Très vite, notre application va grossir, on va devoir ajouter des actions au contrôleur, des contrôleurs à l'application, etc. Et un problème va vite se faire sentir : qu'en est-il de la duplication de code ? Par exemple, la feuille de style que l'on doit ajouter dans chaque contrôleur ne pourrait-elle pas être ajoutée une bonne fois pour toute ?
+Notre application va grossir, on va devoir ajouter des actions au contrôleur, des contrôleurs à l'application, etc. Et un problème va vite se faire sentir : qu'en est-il de la duplication de code ? Par exemple, la feuille de style que l'on doit ajouter dans chaque contrôleur ne pourrait-elle pas être ajoutée une bonne fois pour toute ?
 
 C'est là qu'intervient l'\texttt{AppBootstrap}. Ce mécanisme permet d'automatiser certaines tâches répétitives. Pour se faire, rien de plus simple : il suffit de créer le fichier /app/AppBootstrap.php et d'y ajouter le code suivant (obligatoire)
 \begin{PHP}
@@ -463,51 +580,248 @@ Mais ça demande pas mal de changements, et je n'ai jamais pris le temps de le f
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Aller plus loin}
-\subsection{Utilisation d'un layout}
-// structure du site
-
-// layout global + partial
+Nous avons vu dans la partie précédente toutes les bases de MINZ. Celle qui suit va décrire un peu plus en profondeur quelques aspects "moins importants", mais pratiques au quotidien.
 
 \subsection{Les variables de session}
-// gérées par la classe Session
+On l'a déjà un peu vu précédemment, les variables de session sont gérées à travers la classe \texttt{Session}. Cette dernière ne fait que gérer en son sein la variable globale \texttt{\$\_SESSION}. Voyons voir un peu ses spécificités.\\
 
-// history et language = cas particuliers
+La session est démarrée automatiquement par le framework, vous n'avez donc pas à vous en inquiéter.
+\begin{PHP}
+// assigne une valeur a la variable username
+Session::_param('username', 'john');
 
-\subsection{Historisez le parcours de vos utilisateurs}
-// classe History enregistre à chaque page le parcours de l'utilisateur
+// recupere la valeur
+$username = Session::param('username');
 
-// possibilité de revenir aux pages précédentes grâce à la classe Url
+// supprime la variable
+Session::_param('username', false);
+// ou
+Session::_param('username');
 
-// possibilité d'annuler cet enregistrement
+// efface la session
+Session::unset_session();
+// ou pour forcer la suppression de l'historique et de la langue
+Session::unset_session(true);
+\end{PHP}
+%$
+
+Comme précisé dans les commentaires, il existe deux variables de session un peu spéciales :
+\begin{itemize}
+  \item \texttt{history} est un tableau mémorisant l'historique de navigation du visiteur. Utile pour les retours en arrière (mais nécessiterait des améliorations)
+  \item \texttt{language} permet de stocker la langue dans laquelle afficher le site. Utile pour internationaliser son application.
+\end{itemize}
+
+\subsection{Gérer facilement les urls internes}
+Vous aurez peut-être noté que l'url rewriting est facultatif d'usage. Aussi il peut être intéressant de l'activer / désactiver à la volée pour rendre votre application un peu plus portable (vu que nombre d'hébergeurs ne propose pas l'url rewriting).
+
+Problème : comment faire en sorte pour que les liens internes au site soient toujours correctement formatés ?
+
+Il existe pour ça la classe \texttt{Url}, dont une instance est directement accessible à partir de la vue. La seule méthode utilisable est \texttt{display()}, prenant un tableau décrivant l'url en paramètre. Petit exemple (on se situe dans un fichier de vue) :
+\begin{HTML}
+<a href="<?php echo $this->url->display(); ?>">Un lien vers l'accueil du site</a>
+
+<?php
+  $urlBlog = array(
+    'c' => 'blog',
+    'a' => 'index',
+    'params' => array('page'=>2)
+  );
+?>
+
+<a href="<?php echo $this->url->display($urlBlog); ?>">Un lien vers la page 2 du blog</a>
+\end{HTML}
+
+Le gros avantage est que vous n'avez plus à vous soucier du format de vos urls, tout est géré par le framework, que l'url rewriting soit activé ou non.
+
+\subsection{L'historique du parcours de vos utilisateurs}
+J'en ai déjà parlé plus haut, vous pouvez gérer l'historique du parcours de vos visiteurs. Malheureusement la classe le proposant devrait être revue car sujette à quelques problèmes.\\
+
+Trois méthodes sont disponibles, mais seulement deux vraiment utiles :
+\begin{itemize}
+  \item \texttt{put(\$url)} permet d'ajouter une url à l'historique. En principe c'est le framework qui s'en occupe tout seul, vous n'en avez en principe pas besoin.
+  \item \texttt{back([\$step[, \$default]])} renvoie par défaut l'url de la page précédente. Vous pouvez spécifier le nombre de pas en arrière à faire ainsi qu'une url par défaut si aucune url n'est trouvée.
+  \item \texttt{delete([\$num])} supprime une url. Si rien n'est spécifié, toutes les urls seront supprimées. Vous pouvez l'utiliser pour ne pas sauvegarder la page actuelle (utile lors d'un passage sur une page de redirection par exemple)
+\end{itemize}
+
+Un exemple d'utilisation :
+\begin{HTML}
+<?php 
+  $defaut = array(
+    'c' => 'index',
+    'a' => 'index'
+  );
+  $urlPrecedente = History::back(History::PREVIOUS_PAGE, $defaut);
+?>
+
+<a href="<?php echo $this->url->display($urlPrecedente); ?>">Un lien vers la page precedente</a>
+\end{HTML}
+%$
 
 \subsection{Utilisation du système de Cache}
-// Met en cache les pages visitées
+Un site peut vite devenir lourd à charger lorsque de nombreuses choses sont faites en amont. Pour ça, il existe le cache. Dans Minz, une fonctionnalité permet de gérer facilement le cache de vos pages web.
 
-// Possibilité d'annuler la mise en cache
+Si rien n'est spécifié, à chaque passage sur une page non visitée, celle-ci est enregistré dans le cache (en principe dans le répertoire /cache). À la visite suivante sur cette même page, aucun calcul ne sera fait et Minz se contentera de renvoyer la page du cache.
 
-// Attention si vous êtes loggué, la mise en cache enregistrera des choses qui ne sont pas forcément accessibles à tout le monde
+Un problème se pose si vous êtes connectés avec un compte administrateur et que c'est vous qui enregistrez le cache. Vos visiteurs auront la page de cache avec des liens vers votre administration ! Une bonne pratique est alors de désactiver le cache lorsque vous êtes connectés. Par exemple, dans l'AppBootstrap on pourrait avoir quelque chose de la forme :
+\begin{PHP}
+$user = new User();
 
-// Améliorations possibles
+if($user->isLogged()) {
+  Cache::switchCache();
+}
+\end{PHP}
 
-\subsection{Internationalisez votre application}
-// Structure
+Une autre manière est de désactiver totalement la mise en cache dans le fichier de configuration (\texttt{cache\_enabled = false})\\
 
-// Utilisation simple de la classe Translate
+L'activation ou non du cache est à peu près la seule chose dont vous avez à vous soucier, tout le reste étant géré par le framework.
 
-\subsection{Écrire sa propre librairie}
-// Fonctionnement
+\subsection{Internationaliser son application}
+Votre site commence à prendre de l'ampleur et vous commencez à lorgner vers une internationalisation de celui-ci ? Tout est prévu !
+
+La classe \texttt{Translate} permet, à partir de fichiers sous la forme 'clé' => 'traduction', de traduire facilement votre application. Si la clé n'est pas présente dans le fichier, la valeur retournée sera la clé elle-même. Ces fichiers se placent dans le répertoire /app/i18n/. Par exemple, deux fichiers :
+
+/app/i18n/fr.php
+\begin{PHP}
+return array(
+  'home' => 'Accueil',
+  'welcome' => 'Bienvenue !',
+  'connection' => 'Connexion',
+}
+\end{PHP}
+
+/app/i18n/en.php
+\begin{PHP}
+return array(
+  'home' => 'Home',
+  'welcome' => 'Welcome !',
+  'connection' => 'Connection',
+}
+\end{PHP}
+
+Ensuite, pour utiliser ceci, la vue propose une instance de Translate pouvant être utilisé ainsi :
+\begin{HTML}
+<h2><?php echo $this->translate->t('welcome');?></h2>
+\end{HTML}
+%$
+
+La langue par défaut peut être définie dans le fichier de configuration (\texttt{language = "fr"} par exemple). Et pour permettre à vos visiteurs de modifier la langue, il suffit de changer la valeur de la variable de session '\texttt{language}' (dont on a parlé plus haut).
+
+Notez que la valeur de cette variable doit être le nom du fichier de traduction (convention Minz).
 
 \subsection{La View en détails}
-// Explication des différentes méthodes
+Il est temps de détailler la classe View un peu plus en profondeur. Voyons donc ses méthodes plus ou moins utiles :
+\begin{itemize}
+  \item \texttt{render()} utilisé en principe dans le layout pour afficher la vue.
+  \item \texttt{renderWithLayout()} vous n'avez en principe pas besoin de l'utiliser, cela permet d'afficher la vue avec le layout.
+  \item \texttt{partial(\$file)} affiche un morceau de layout.
+  \item \texttt{has\_layout()} permet de savoir si le layout est activé.
+  \item \texttt{switchLayout()} permet de switcher l'utilisation du layout.
+  \item \texttt{headTitle()} retourne le titre de l'application dans la balise html \texttt{<title>}
+  \item \texttt{headStyle()} retourne la liste des fichiers css (assez limité)
+  \item \texttt{headScript()} retourne la liste des scripts javascript (assez limité)
+  \item \texttt{setTitle(\$title)} change le titre de l'application
+  \item \texttt{appendTitle(\$title)} ajoute un titre \textbf{avant} le titre actuel (même principe pour \texttt{appendStyle} et \texttt{appendScript})
+  \item \texttt{prependTitle(\$title)} ajoute un titre \textbf{après} le titre actuel (même principe pour \texttt{prependStyle} et \texttt{prependScript})
+\end{itemize}
+
+\subsection{Paginer les longues listes}
+Imaginons une liste d'une vingtaine d'articles de blog. Vous aimeriez bien paginer cette liste sur différentes pages afin de ne pas tout afficher tout d'un coup. Nous avons pour se faire la classe \texttt{Paginator}.
+
+Dans le contrôleur
+\begin{PHP}
+// recupere le numero de page actuel
+$page = Helper::fetch_get('page', 1);
+// cree un paginator en prenant en parametre un tableau
+$this->view->articlesPaginator = new Paginator($articles);
+// indique le nombre d'article a afficher
+$this->view->articlesPaginator->_nbItemsPerPage(5);
+// indique la page actuelle
+$this->view->articlesPaginator->_currentPage($page);
+\end{PHP}
+
+Dans la vue
+\begin{PHP}
+<?php
+// affiche la pagination
+// en parametre, le nom du fichier de rendu et le nom du getteur
+$this->articlesPaginator->render('pagination.phtml','page');
+$articles = $this->articlesPaginator->items();
+
+// parcours les articles
+foreach($articles as $article) {
+  // traite l'article
+}
+?>
+\end{PHP}
+
+Dans /app/views/helpers/pagination.phtml (un peu plus compliqué, mais peut être copié/collé tel quel ;))
+\begin{PHP}
+<?php
+  $url = new Url();
+
+  $route = Route::getInstance();
+  $c = $route->controller();
+  $a = $route->action();
+  $params = $route->params();
+?>
+<?php if($this->nbPage>1): ?>
+<ul class="pagination">
+
+  <?php if($this->currentPage>1): ?>
+  <?php $params[$getteur] = 1; ?>
+  <li class="pager-first"><a href="<?php echo $url->display(array('c'=>$c,'a'=>$a,'params'=>$params)); ?>">Debut</a></li>
+  <?php $params[$getteur] = $this->currentPage-1; ?>
+  <li class="pager-previous"><a href="<?php echo $url->display(array('c'=>$c,'a'=>$a,'params'=>$params)); ?>">Precedent</a></li>
+  <?php endif; ?>
+
+  <?php for($i=$this->currentPage-4; $i<=$this->currentPage+4; $i++): ?>
+    <?php if($i>0 && $i<=$this->nbPage): ?>
+      <?php if($i!=$this->currentPage): ?>
+        <?php $params[$getteur] = $i; ?>
+        <li class="pager-item"><a href="<?php echo $url->display(array('c'=>$c,'a'=>$a,'params'=>$params)); ?>"><?php echo $i; ?></a></li>
+        <?php else: ?>
+        <li class="pager-current"><?php echo $i; ?></li>
+      <?php endif; ?>
+    <?php endif; ?>
+  <?php endfor; ?>
+
+  <?php if($this->currentPage<$this->nbPage): ?>
+  <?php $params[$getteur] = $this->currentPage+1; ?>
+  <li class="pager-next"><a href="<?php echo $url->display(array('c'=>$c,'a'=>$a,'params'=>$params)); ?>">Suivant</a></li>
+  <?php $params[$getteur] = $this->nbPage; ?>
+  <li class="pager-last"><a href="<?php echo $url->display(array('c'=>$c,'a'=>$a,'params'=>$params)); ?>">Fin</a></li>
+  <?php endif; ?>
+
+</ul>
+<?php endif; ?>
+\end{PHP}
+%$
+
+\subsection{Logguer ce qui se passe}
+Dernière classe importante : \texttt{Log}. Très simple d'utilisation, vous n'avez qu'à connaître la méthode \texttt{record()} qui permet d'enregistrer vos logs dans un fichier spécifié ou désigné par défaut. Vous pouvez vous en servir pour logguer ce qui se passe sur votre site, tout en sachant que Minz log déjà un certain nombre d'information.
+
+Utilisation :
+\begin{PHP}
+Log::record('Salut ! Je ne sers pas a grand chose :)', Log::NOTICE);
+Log::record('Attention, y a quelque chose de bizarre', Log::WARNING);
+Log::record('Oh mon Dieu ! Une erreur !', Log::ERROR);
+\end{PHP}
 
 \subsection{Sécuriser son application MINZ}
-// Le fichier de configuration
+Je n'essayerai pas de faire un document exhaustif sur la sécurité d'une application web, tellement il y aurait à dire, et cela demanderait un autre document. On peux tout de même observer un certain nombre de recommandations :
+\begin{itemize}
+  \item Lorsque votre site entrera en phase de production, pensez à changer la variable environment dans la configuration (\texttt{environment = "production"})
+  \item Pensez à empêcher le listing des fichiers d'un répertoire dans votre document .htaccess (\texttt{Options -Indexes}). En principe Minz, à travers l'url rewriting général, empêche déjà ce listing "sauvage" mais on n'est jamais trop sûr !
+  \item Vérifiez les droits d'accès à vos répertoires et fichiers pour ne pas laisser des droits d'écriture sur des répertoires qui n'en valent pas la peine !
+  \item Ne faites jamais confiance à ce que vos visiteurs font. Dites vous que l'adresse url est particulièrement sensible à des modifications. De même, vérifiez toujours les formulaires remplis par leur soin avec \texttt{htmlspecialchars()} par exemple.
+  \item Assurez-vous de ne pas laisser filtrer les numéros de version de votre serveur Apache, PHP et autres. C'est une porte ouverte (et une invitation) à tester des failles déjà connues sur votre infrastructure.
+  \item Regardez les logs PHP (et Minz) de votre application. Cela peut vous montrer des tentatives de la part de visiteurs de vous attaquer.
+\end{itemize}
 
-// Les droits sur les fichiers
+\subsection{Pour terminer et en guise de conclusion}
+Cette documentation est terminée. Elle est un peu longue mais je l'ai voulue la plus exhaustive possible. N'oubliez pas qu'il n'y a rien de mieux que de pratiquer, et si certains points restent obscurs, n'hésitez pas à aller fouiller dans le code de Minz, à l'adapter à vos besoins, et de me faire remonter vos ajouts. Mais si, non décidémment vous ne comprenez pas, n'oubliez pas que Minz est fourni avec une application par défaut qui reprend un grand nombre de tout ce dont cette documentation parle. Voir le code "en action" peut peut-être aussi aider.
 
-
-
-\printindex
+En espérant que le tout reste lisible et compréhensible ! :)
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
