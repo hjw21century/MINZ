@@ -1,10 +1,4 @@
 ========
-TODO v1
- *) Documentation
- *) Correction bugs
-
-
-========
 REQUIS
  *) Un serveur Apache
  *) PHP Version 5 ou plus
@@ -28,11 +22,12 @@ INSTALLATION
 
 ========
 CHANGELOG
-2012-02-18 Changes with MINZ 1.0.0 alpha :
+2012-02-18 Changes with MINZ 1.0.0 :
  *) Ajout de la classe Cache
  *) Meilleure utilisation des Exception à travers la librairie
  *) Mise à jour des Model_{array|sql|txt}
  *) Code reformaté
+ *) De la documentation !
  
 2012-02-12 Changes with MINZ 0.5.0 :
  *) Ajout d'un paramètre de configuration indiquant la langue affichée actuellement par le site
