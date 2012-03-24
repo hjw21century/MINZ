@@ -6,6 +6,7 @@
 
 /**
  * La classe Model_sql représente le modèle interragissant avec les bases de données
+ * Seul la connexion MySQL est prise en charge pour le moment
  */
 class Model_sql {
 	/**

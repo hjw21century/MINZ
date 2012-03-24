@@ -2,6 +2,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[francais]{babel}
+\usepackage[top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry}
 \usepackage{lmodern}
 
 % Pour avoir de belles url
@@ -24,6 +25,7 @@
 \usepackage{listings}
 \lstnewenvironment{PHP}{
   \lstset{
+    frame=trBL,
     language=PHP,
     basicstyle=\ttfamily,
     keywordstyle=\color[rgb]{0,0,1},
@@ -31,10 +33,13 @@
     stringstyle=\color[rgb]{0.627,0.126,0.941},
     showspaces=false,
     showstringspaces=false,
+    morekeywords={class, extends, public, function},
+    breaklines=true,
   }
 }{}
 \lstnewenvironment{HTML}{
   \lstset{
+    frame=trBL,
     language=HTML,
     basicstyle=\ttfamily,
     keywordstyle=\color[rgb]{0,0,1},
@@ -42,6 +47,7 @@
     stringstyle=\color[rgb]{0.627,0.126,0.941},
     showspaces=false,
     showstringspaces=false,
+    breaklines=true,
   }
 }{}
 
@@ -208,7 +214,7 @@ Ici il s'agit d'une chaîne, mais bien sûr il peut s'agir de tout type de varia
 
 À noter qu'il existe plusieurs méthodes applicables sur une \texttt{View} qui permettent notamment d'ajouter des fichiers CSS et des scripts javascript. Le détail est donné plus loin.\\
 
-Ensuite, l'affichage des vues se fait à l'aide de code HTML. À noter qu'une vue correspond à une action donnée, correspondant elle-même à un contrôleur donné. Ainsi le nommage se fera de cette manière : \\\texttt{/app/views/controller/action.phtml} où \textbf{controller} correspond au nom du contrôleur concerné, et \textbf{action} à l'action concernée (off course !).\\
+Ensuite, l'affichage des vues se fait à l'aide de code HTML. À noter qu'une vue correspond à une action donnée, correspondant elle-même à un contrôleur donné. Ainsi le nommage se fera de cette manière : \\\texttt{/app/views/controller/action.phtml} où \textbf{controller} correspond au nom du contrôleur concerné, et \textbf{action} à l'action concernée.\\
 Le contenu de ces fichiers sera du HTML mais vous pouvez tout de même y utiliser du PHP, notamment pour manipuler les données. À noter que lorsque vous travaillez dans ces fichiers vous êtes \textbf{dans} la vue, c'est-à-dire que les variables qui étaient accessibles tout à l'heure à travers \texttt{\$this->view->variable} dans le contrôleur, seront accessibles directement : \texttt{\$this->variable}. Ainsi un contenu possible, en reprenant l'exemple de la chaîne de tout à l'heure, sera :
 \begin{HTML}
 <div id="header"><?php echo $this->title; ?></div>
@@ -218,14 +224,131 @@ Le contenu de ces fichiers sera du HTML mais vous pouvez tout de même y utilise
 qui affichera deux blocs affichant d'abord le titre de l'application, puis le paragraphe ``\textit{ma super chaîne}''.
 
 \subsection{Écrire un Model}
-// écriture du Model de base (manipulable à travers la vue)
+Le modèle dit "de base" est le coeur de l'application. C'est lui qui représente les éléments "métier". Ainsi le modèle pourra représenter un utilisateur, un article de blog, une photo d'une galerie. On peut appliquer à chacun de ces modèles des actions : par exemple, l'utilisateur possédera une méthode \texttt{login()} qui lui permettra de se connecter.\\
+Tout modèle doit étendre la classe \texttt{Model}.
 
-// écriture du Model\_dao (manipule la BD et manipulable par le contrôleur) 
+\begin{PHP}
+class User extends Model {
+  private $username;
+  private $mail;
 
-// écriture du Helper (convertir un Model\_dao en Model) -> utilisé par Model\_dao
+  public function __construct($username, $mail) {
+    $this->username = $username;
+    $this->mail = $mail;
+  }
+
+  public function login($username, $password) {
+    // dans un cas reel, on ira verifier les infos en base de donnees
+    if($username=='john' && $password=='doe') {
+      // attribue $username a une variable de session
+      Session::_param('username', $username);
+    }
+  }
+
+  public function isLogged() {
+    // permet de recuperer la variable de session 'username'
+    $username = Session::param('username');
+
+    return !empty($username);
+  }
+}
+\end{PHP}
+
+Le modèle de base est très utile, mais bien souvent insuffisant, surtout dans une application web qui stocke des données. En effet, on aura bien souvent besoin de sauvegarder une liste d'utilisateurs en base de données (par exemple). Ainsi, le modèle DAO va permettre d'accéder à ces informations. À ce jour, 3 modes d'accès à des supports de stockage sont disponibles dans MINZ : les fichiers textes, les tableaux PHP (stockés dans des fichiers texte) et les bases de données MySQL (utilisant PDO)
+
+\begin{PHP}
+// La connexion a la BDD se fait automatiquement grace aux infos donnees dans le fichier de configuration
+// a inclure avec include_once(APP_PATH.'/models/dao/UserDAO.sql.php'); dans User.php
+class UserDAO extends Model_sql {
+  public function searchByUsername($username) {
+    $sql = 'SELECT * FROM user WHERE loginUser=?';
+    
+    $stm = $this->bd->prepare($sql); 
+    $stm->execute(array($username));
+    $res = $stm->fetchAll(PDO::FETCH_CLASS);
+    
+    if(isset($res[0])) {
+      return $res[0];
+    } else {
+      return false;
+    }
+  }
+}
+\end{PHP}
+
+Notre problème ici est que nous renvoyons une classe "non connue" par l'application et tirée de la base de données. Une bonne pratique est de "mapper" cet objet "BDD" avec un modèle déjà écrit afin que le modèle DAO ne renvoie que des modèles "User", codé plus haut. Pour cela nous allons utiliser un Helper :
+
+\begin{PHP}
+class HelperUser {
+  // permet de convertir un Model DAO (tire de BDD ici) en Model
+  // on peut aussi creer une methode convertissant des listes de Model DAO
+  public static function daoToUser($dao) {
+    return new User($dao->loginUser, $dao->mailUser);
+  }
+}
+\end{PHP}
+
+Ainsi, nous utiliserons cette méthode dans la classe UserDAO en remplaçant
+\begin{PHP}
+return $res[0];
+\end{PHP}
+par
+\begin{PHP}
+return HelperUser::daoToUser($res[0]);
+\end{PHP}
+En pensant bien à inclure le fichier de Helper dans UserDAO
+\begin{PHP}
+include_once(APP_PATH.'/models/helper/HelperUser.php');
+\end{PHP}
 
 \subsection{Lier le tout}
-// Exemple d'un controller complet
+Maintenant que nous avons vu chacun des modules important, il est tant d'articuler tout ça autour d'un contrôleur concret. Nous allons donc réutiliser les modèles écrits jusque-là. Cet exemple permet de rechercher dans une base de données un utilisateur, à partir d'un username passé via l'url.\\
+
+Le contrôleur
+\begin{PHP}
+include_once(APP_PATH.'/models/User.php');
+
+class indexController extends Controller {
+  public function indexAction() {
+    // recupere le username dans l'url (variable $_GET['username'])
+    // on met $username = 'john' par defaut
+    $username = Helper::fetch_get('username', 'john');
+  
+    // recherche en BD de l'utilisateur
+    $userDAO = new UserDAO();
+    // si non trouve, retourne false
+    $this->view->user = $userDAO->searchByUsername($username);
+    
+    // On change quelques infos sur la page
+    $this->view->appendTitle("Recherche d'un utilisateur - ");
+    // url permet de gerer facilement les urls internes a l'application MINZ
+    // son utilisation sera decrite plus loin
+    $this->view->prependStyle($this->view->url->display().'/theme/defaut.css');
+  }
+}
+\end{PHP}
+
+La vue
+\begin{HTML}
+<!DOCTYPE html>
+<html>
+  <head>
+    <?php echo $this->headTitle(); ?>
+    <?php echo $this->headStyle(); ?>
+  </head>
+  <body>
+    <h1><a href="<?php echo $this->url->display();?>"><?php echo $this->title; ?></a></h1>
+
+    <?php if(!$this->user) { ?>
+    <p class="error">L'utilisateur recherche n'existe pas.</p>
+    <?php } else { ?>
+    <p class="infos">L'utilisateur <?php echo $this->user->username(); ?> possede l'adresse mail <?php echo $this->user->mail(); ?>.</p>
+    <?php } ?>
+  </body>
+</html>
+\end{HTML}
+
+
 
 \subsection{Utiliser l'AppBootstrap}
 // Automatiser les tâches récurrentes à toute l'application
