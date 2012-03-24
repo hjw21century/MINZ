@@ -28,7 +28,7 @@ INSTALLATION
 
 ========
 CHANGELOG
-2012-02-18 Changes with MINZ 1.0.0 :
+2012-02-18 Changes with MINZ 1.0.0 alpha :
  *) Ajout de la classe Cache
  *) Meilleure utilisation des Exception à travers la librairie
  *) Mise à jour des Model_{array|sql|txt}
