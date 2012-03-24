@@ -19,7 +19,7 @@
 \usepackage{color}
 \definecolor{bleuClair}{rgb}{0,0.4,0.9}
 \definecolor{bleuFonce}{rgb}{0,0.3,0.6}
-\definecolor{grisFonce}{gray}{0.25}
+\definecolor{grisFonce}{gray}{0.40}
 
 % Pour mettre du code source
 \usepackage{listings}
@@ -50,9 +50,24 @@
     breaklines=true,
   }
 }{}
+\lstnewenvironment{htaccess}{
+  \lstset{
+    frame=trBL,
+    basicstyle=\ttfamily,
+    keywordstyle=\color[rgb]{0,0,1},
+    commentstyle=\color[rgb]{0.133,0.545,0.133},
+    stringstyle=\color[rgb]{0.627,0.126,0.941},
+    showspaces=false,
+    showstringspaces=false,
+    morekeywords={RewriteEngine, RewriteCond, RewriteRule},
+    breaklines=true,
+  }
+}{}
 
 \title{MINZ Is Not Zend\\{\small version 1.0}\\\textbf{Documentation\\ {\small en cours de rédaction}}}
 \author{Marien Fressinaud}
+
+
 
 \makeatletter
 \renewcommand\section{\@startsection{section}{1}{\z@}%
@@ -123,7 +138,7 @@ Passons à l'installation. Là encore, c'est assez simple. Pour le moment, vous 
 
 Une fois les sources téléchargées, il ne vous reste plus qu'à décompresser l'archive sur votre serveur. Assurez-vous que votre nom de domaine pointe sur le répertoire \texttt{public} et modifiez le nom de domaine dans le fichier de configuration (\texttt{/app/configuration/application.ini}). Rendez-vous sur votre site à partir de votre navigateur, et vous devriez voir apparaître l'application par défaut de MINZ ! Félicitations.\\
 
-\textbf{Remarque} : \textcolor{grisFonce}{il se peut que vous ne puissiez faire pointer votre nom de domaine au bon endroit. Deux solutions s'offrent à vous :
+\textcolor{grisFonce}{\textbf{Remarque} : il se peut que vous ne puissiez faire pointer votre nom de domaine au bon endroit. Deux solutions s'offrent à vous :
 \begin{enumerate}
   \item Coupez/collez le contenu de \texttt{public} dans le répertoire dans lequel pointe votre nom de domaine. Des modifications sont alors à porter aux constantes de chemins dans le contenu de \texttt{index.php}.
   \item Dans le fichier de configuration, lors de la modification du nom de domaine, ajoutez le chemin complémentaire. Par exemple, vous aurez la ligne \texttt{domain = "http://www.minz.test/public"} si votre nom de domaine pointe sur le répertoire parent de \texttt{public}.
@@ -209,7 +224,7 @@ Ainsi, dans ces méthodes, vous pouvez aussi manipuler les \texttt{Models} qui p
 \subsection{Écrire une View}
 Il est important de comprendre que les Views s'utilisent de deux manières complémentaires. Tout d'abord à l'intérieur des Controllers, puis ensuite dans les fichiers de type .phtml qui décrivent le code HTML.\\
 
-Dans un contrôleur, nous l'avons vu, la vue est accessible à l'aide de l'attribut \texttt{\$this->view}. On peut lui ajouter des variables très facilement de cette manière : \texttt{\$this->view->maChaine = 'ma super chaîne';}\\
+Dans un contrôleur, nous l'avons vu, la vue est accessible à l'aide de l'attribut \texttt{\$this->view}. On peut lui ajouter des variables très facilement de cette manière : \texttt{\$this->view->maChaine = 'ma super chaine';}\\
 Ici il s'agit d'une chaîne, mais bien sûr il peut s'agir de tout type de variable, et le plus souvent il s'agira d'objets contenant les données à manipuler, issues de la base de données. De cette manière vous pouvez transmettre facilement des données à la vue.\\
 
 À noter qu'il existe plusieurs méthodes applicables sur une \texttt{View} qui permettent notamment d'ajouter des fichiers CSS et des scripts javascript. Le détail est donné plus loin.\\
@@ -268,7 +283,7 @@ class UserDAO extends Model_sql {
     $res = $stm->fetchAll(PDO::FETCH_CLASS);
     
     if(isset($res[0])) {
-      return $res[0];
+      return $res[0];%$
     } else {
       return false;
     }
@@ -306,7 +321,7 @@ Maintenant que nous avons vu chacun des modules important, il est tant d'articul
 
 Le contrôleur
 \begin{PHP}
-include_once(APP_PATH.'/models/User.php');
+include(APP_PATH.'/models/User.php');
 
 class indexController extends Controller {
   public function indexAction() {
@@ -342,7 +357,7 @@ La vue
     <?php if(!$this->user) { ?>
     <p class="error">L'utilisateur recherche n'existe pas.</p>
     <?php } else { ?>
-    <p class="infos">L'utilisateur <?php echo $this->user->username(); ?> possede l'adresse mail <?php echo $this->user->mail(); ?>.</p>
+    <p class="infos">L'utilisateur <?php echo $this->user->username(); ?> possede l'adresse mail <?php echo $this->user->mail(); ?>.</p>%$
     <?php } ?>
   </body>
 </html>
@@ -351,16 +366,98 @@ La vue
 
 
 \subsection{Utiliser l'AppBootstrap}
-// Automatiser les tâches récurrentes à toute l'application
+Très vite, notre application va grossir, on va devoir ajouter des actions au contrôleur, des contrôleurs à l'application, etc. Et un problème va vite se faire sentir : qu'en est-il de la duplication de code ? Par exemple, la feuille de style que l'on doit ajouter dans chaque contrôleur ne pourrait-elle pas être ajoutée une bonne fois pour toute ?
 
-// Exemple : ajouter une feuille de style applicable à l'ensemble du site
+C'est là qu'intervient l'\texttt{AppBootstrap}. Ce mécanisme permet d'automatiser certaines tâches répétitives. Pour se faire, rien de plus simple : il suffit de créer le fichier /app/AppBootstrap.php et d'y ajouter le code suivant (obligatoire)
+\begin{PHP}
+class AppBootstrap {
+  private $view;
+
+  public function __construct() {
+    $controller = Controller::getInstance();
+    $this->view = $controller->getView();
+  }
+
+  // Fonction lancee par le Boostrap de la librairie et permet de charger les elements redondants dans chaque Controller.
+  public function run() {}
+}
+\end{PHP}
+
+Il ne vous reste plus alors qu'à ajouter ce qu'il vous faut dans la méthode \texttt{run()}. Notez que tout ce qu'il est possible de faire dans un contrôleur, est possible dans l'AppBootstrap. Il vaut mieux cependant s'en tenir au strict minimum. Par exemple :
+\begin{PHP}
+public function run() {
+  include(APP_PATH.'/models/User.php');
+  $this->view->prependStyle($this->view->url->display().'/theme/defaut.css');
+}
+\end{PHP}
+
 
 \subsection{Router les URLs}
-// définir ses routes dans le fichier /app/configuration/routes.php
+Ok, nous avons une application qui tourne à peu près correctement. Malheureusement, comme nous l'avons vu, le contrôleur et l'action à exécuter passe via les paramètres renseignés dans l'url. Du coup celle-ci n'est pas très jolie :( Par exemple, l'url pour accéder à un article de blog pourrait être de la forme \url{http://votre-domaine.fr/?c=blog&a=voir&id=42}
 
-// url rewriting géré par php
+Heureusement, l'url rewriting est là pour vous ! Ici, nous n'allons pas vraiment voir ce que nous propose Apache car ce n'est pas le but (et je n'ai jamais trouvé ça facile !). Aussi, la seule chose que vous avez à faire dans votre fichier \texttt{.htaccess} est d'ajouter ces lignes :
+\begin{htaccess}
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^.*$ - [NC,L]
+RewriteRule ^.*$ index.php [NC,L]
+\end{htaccess}
 
-// Améliorations possible
+Cela permet tout simplement de rediriger toutes les requêtes tombant sur votre site sur le fichier index.php, laissant la main ainsi au framework. Assurez-vous maintenant que la variable \texttt{use\_url\_rewriting} dans le fichier de configuration soit bien à \texttt{true}.
+
+Le principe de l'url rewriting dans Minz repose sur un tableau PHP associant 3 ou 4 éléments :
+\begin{itemize}
+  \item la \texttt{route} qui correspond à l'url amenant à la page demandée
+  \item le contrôleur associé à cette route
+  \item l'action associée elle aussi à cette route
+  \item et un tableau de paramètres supplémentaires pour pouvoir utiliser des urls dynamiques
+\end{itemize}
+
+Aussi, vu qu'un exemple est plus parlant que du blabla, voici le contenu d'un fichier /app/configuration/routes.php
+\begin{PHP}
+return array(
+  // blog
+  array(
+    'route'       => '/blog',
+    'controller'  => 'blog',
+    'action'      => 'index'
+  ),
+  array(
+    'route'       => '/blog/tag/*',
+    'controller'  => 'blog',
+    'action'      => 'search',
+    'params'      => array('tag')
+  ),
+  array(
+    'route'       => '/blog/*/*',
+    'controller'  => 'blog',
+    'action'      => 'voir',
+    'params'      => array('id','title')
+  ),
+  array(
+    'route'       => '/*',
+    'controller'  => 'index',
+    'action'      => 'index',
+    'params'      => array('page')
+    ),
+);
+\end{PHP}
+
+Ici, nous renvoyons un tableau contenant l'ensemble des règles de réécriture. Chaque règle est définie elle-même dans un tableau. Afin de définir une url dynamique, nous utilisons l'astérisque (*). Attention, celle-ci doit obligatoirement se trouver \textbf{seule} derrière un slash (/). Afin de définir le nom de la variable \texttt{\$\_GET[]}, on l'indique dans le tableau associé à \texttt{params}.
+
+Une petite remarque importante : comme j'ai voulu l'illustrer avec la dernière règle, celle-ci pourrait être confondue avec la première. En effet, "blog" pourrait être mappé avec l'astérisque et être envoyé en tant que valeur de la variable \texttt{\$\_GET['page']}. Pour pallier à ce problème, il faut savoir que Minz s'arrête à la première règle rencontrée correspondant à l'url actuelle. Dans mon exemple, il n'y a donc pas de problème, mais en inversant les deux règles, on ne pourrait plus accéder au contrôleur "Blog" et son action "index". Attention donc à l'ordre de vos règles et faire en sorte qu'elles ne s'écrasent pas les unes les autres.\\
+
+On pourra imaginer un certain nombre d'améliorations possibles au niveau du routage des urls. Le routage dynamique est limité par la séparation obligatoire des variables entre des slashs (/), j'avais commencé à penser à les définir, à la place des astérisques, par des accolades et l'on aurait pu avoir quelque chose de la forme :
+\begin{PHP}
+array(
+  'route'       => '/blog/{id}-{title}.html',
+  'controller'  => 'blog',
+  'action'      => 'voir'
+)
+\end{PHP}
+Mais ça demande pas mal de changements, et je n'ai jamais pris le temps de le faire. De plus, le problème de l'ordre des règles peux poser quelques problèmes.
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
