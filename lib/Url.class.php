@@ -19,33 +19,33 @@ class Url {
 	 *				  $url['params'] = tableau des paramètres supplémentaires
 	 * @return l'url formatée
 	 */
-	public function display($url = array()) {
+	public function display ($url = array ()) {
 		// url débute par l'url de base définie dans la conf par "domain"
-		$url_string = Configuration::domain();
-		$route = Route::getInstance();
+		$url_string = Configuration::domain ();
+		$route = Route::getInstance ();
 		
-		if(Configuration::use_url_rewriting()):
+		if (Configuration::use_url_rewriting ()) {
 			// on recherche l'url dans la table de routage
-			$url_string .= $route->searchRoute($url);
-		endif;
+			$url_string .= $route->searchRoute ($url);
+		}
 		
-		if($url_string==Configuration::domain()):
+		if ($url_string == Configuration::domain ()) {
 			// l'url n'a pas pu être rewritée
 			// (non spécifiée dans routes.php ou url_rewriting désactivé)
 			// on construit alors l'url de façon plus standard (?c=X&a=Y...)
-			if(isset($url['c']) && $url['c']!=$route->defaultController()) {
-				$url_string .= $this->character_param().'c='.$url['c'];
+			if (isset ($url['c']) && $url['c'] != $route->defaultController ()) {
+				$url_string .= $this->character_param ().'c='.$url['c'];
 			}
-			if(isset($url['a']) && $url['a']!=$route->defaultAction()) {
+			if (isset ($url['a']) && $url['a'] != $route->defaultAction ()) {
 				$url_string .= $this->character_param().'a='.$url['a'];
 			}
-			if(isset($url['params'])) {
-				foreach($url['params'] as $key=>$param) {
-					$url_string .= $this->character_param().$key.'='.$param;
+			if (isset ($url['params'])) {
+				foreach ($url['params'] as $key => $param) {
+					$url_string .= $this->character_param ().$key.'='.$param;
 				}
 			}
 			$this->even_character = false;
-		endif;
+		}
 		
 		return $url_string;
 	}
@@ -54,8 +54,12 @@ class Url {
 	 * Retourne le caractère ? ou & en fonction de la variable $even_character
 	 * @return ? si even_character==false, & sinon
 	 */
-	private function character_param() {
-		if( !$this->even_character ) { $this->even_character = true; return '?'; }
-		else return '&';
+	private function character_param () {
+		if (!$this->even_character) {
+			$this->even_character = true;
+			return '?';
+		} else {
+			return '&';
+		}
 	}
 }

@@ -36,25 +36,25 @@ class View {
 	/**
 	 * $styles liste des styles à appliquer à la vue
 	 */
-	private $styles = array();
+	private $styles = array ();
 	  
 	/**
 	 * $scripts liste des scripts à appliquer à la vue
 	 */
-	private $scripts = array();
+	private $scripts = array ();
 	
 	/**
 	 * Constructeur
 	 */
-	public function __construct() {
-		$this->url = new Url();
-		$this->translate = new Translate();
-		$this->title = Configuration::title();
+	public function __construct () {
+		$this->url = new Url ();
+		$this->translate = new Translate ();
+		$this->title = Configuration::title ();
 
-		$route = Route::getInstance();
-		$this->ficView = APP_PATH.'/views/'.$route->controller().'/'.$route->action().'.phtml';
+		$route = Route::getInstance ();
+		$this->ficView = APP_PATH.'/views/'.$route->controller ().'/'.$route->action ().'.phtml';
 
-		if(Configuration::use_layout()) {
+		if (Configuration::use_layout ()) {
 			$this->layout = true;
 		}
 	}
@@ -65,25 +65,25 @@ class View {
 	/**
 	 * Permet d'afficher la vue en brut, sans layout
 	 */
-	public function render() {
-		if(file_exists($this->ficView)) {
-			include($this->ficView);
+	public function render () {
+		if (file_exists ($this->ficView)) {
+			include ($this->ficView);
 		} else {
-			 Log::record('View file doesn\'t exist : '.$this->ficView, Log::NOTICE);
+			 Log::record ('View file doesn\'t exist : '.$this->ficView, Log::NOTICE);
 		}
 	}
 	  
 	/**
 	 * Permet d'afficher la vue à travers un layout (défini dans /app/layout/layout.phtml)
 	 */
-	public function renderWithLayout() {
+	public function renderWithLayout () {
 		$ficLayout = APP_PATH.'/layout/layout.phtml';
 		
-		if(file_exists($ficLayout)) {
-			include($ficLayout);
+		if (file_exists ($ficLayout)) {
+			include ($ficLayout);
 		} else {
-			$this->render();
-			Log::record('Layout file doesn\'t exist : '.$ficLayout, Log::WARNING);
+			$this->render ();
+			Log::record ('Layout file doesn\'t exist : '.$ficLayout, Log::WARNING);
 		}
 	}
 	
@@ -91,13 +91,13 @@ class View {
 	 * Affiche une partie de vue (utilisé principalement dans layout.phtml)
 	 * @param $file fichier situé dans /app/layout/ (ne pas préciser .phtml)
 	 */
-	public function partial($file) {
+	public function partial ($file) {
 		$ficPartial = APP_PATH.'/layout/'.$file.'.phtml';
 		
-		if(file_exists($ficPartial)) {
-			include($ficPartial);
+		if (file_exists ($ficPartial)) {
+			include ($ficPartial);
 		} else {
-			Log::record('Partial layout file doesn\'t exist : '.$ficPartial, Log::WARNING);
+			Log::record ('Partial layout file doesn\'t exist : '.$ficPartial, Log::WARNING);
 		}
 	}
 
@@ -109,13 +109,13 @@ class View {
 	 * Indique si l'on utilise le layout
 	 * @return true si on l'utilise, false sinon
 	 */
-	public function has_layout() {
+	public function has_layout () {
 		return $this->layout;
 	}
 	/**
 	 * Inverse l'utilisation du layout (si on l'utilisait, on ne l'utilise plus et inversement)
 	 */
-	public function switchLayout() {
+	public function switchLayout () {
 		$this->layout = !$this->layout;
 	}
 
@@ -126,7 +126,7 @@ class View {
 	/**
 	 * Retourne la balise <title> à l'aide de la variable $title
 	 */
-	public function headTitle() {
+	public function headTitle () {
 	 return '<title>'.$this->title.'</title>'."\n";
 	}
 
@@ -134,7 +134,7 @@ class View {
 	 * modifie la variable $title
 	 * @param $title nouveau titre
 	 */
-	public function setTitle($title) {
+	public function setTitle ($title) {
 		$this->title = $title;
 	}
 
@@ -142,7 +142,7 @@ class View {
 	 * ajoute un titre AVANT la variable $title
 	 * @param $title le titre à ajouter
 	 */
-	public function appendTitle($title) {
+	public function appendTitle ($title) {
 		$this->title = $title.$this->title;
 	}
 
@@ -150,7 +150,7 @@ class View {
 	 * ajoute un titre APRÈS la variable $title
 	 * @param $title le titre à ajouter
 	 */
-	public function prependTitle($title) {
+	public function prependTitle ($title) {
 		$this->title = $this->title.$title;
 	}
 
@@ -161,10 +161,10 @@ class View {
 	/**
 	 * Retourne les balises <link> pour le css
 	 */
-	public function headStyle() {
+	public function headStyle () {
 		$styles = '';
 
-		foreach($this->styles as $style) {
+		foreach ($this->styles as $style) {
 			$styles .= '<link rel="stylesheet" type="text/css" href="'.$style.'" />'."\n";
 		}
 
@@ -175,15 +175,15 @@ class View {
 	 * ajoute une feuille de style au début de la liste
 	 * @param $style style à ajouter
 	 */
-	public function appendStyle($style) {
-		array_unshift($this->styles, $style);
+	public function appendStyle ($style) {
+		array_unshift ($this->styles, $style);
 	}
 
 	/**
 	 * ajoute une feuille de style à la fin de la liste
 	 * @param $style style à ajouter
 	 */
-	public function prependStyle($style) {
+	public function prependStyle ($style) {
 		$this->styles[] = $style;
 	}
 
@@ -194,10 +194,10 @@ class View {
 	/**
 	 * Retourne les balises <scripts> pour le javascript
 	 */
-	public function headScript() {
+	public function headScript () {
 		$scripts = '';
 
-		foreach($this->scripts as $script) {
+		foreach ($this->scripts as $script) {
 			$scripts .= '<script type="text/javascript" src="'.$script.'"></script>'."\n";
 		}
 
@@ -208,15 +208,15 @@ class View {
 	 * ajoute un script au début de la liste
 	 * @param $script script à ajouter
 	 */
-	public function appendScript($script) {
-		array_unshift($this->scripts, $script);
+	public function appendScript ($script) {
+		array_unshift ($this->scripts, $script);
 	}
 
 	/**
 	 * ajoute un script à la fin de la liste
 	 * @param $script script à ajouter
 	 */
-	public function prependScript($script) {
+	public function prependScript ($script) {
 		$this->scripts[] = $script;
 	}
 }

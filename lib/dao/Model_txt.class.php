@@ -19,11 +19,11 @@ class Model_txt {
 	 * @param $mode mode d'ouverture du fichier ('a+' par défaut)
 	 * @exception Exception quand le fichier n'existe pas ou ne peux pas être ouvert
 	 */
-	public function __construct($nameFile, $mode = 'a+') {
-		$this->file = fopen($nameFile, $mode);
+	public function __construct ($nameFile, $mode = 'a+') {
+		$this->file = fopen ($nameFile, $mode);
 		
-		if(!isset($this->file)) {
-			throw new FileNotExistException('File doesn\'t exist : '.$nameFile, MinzException::WARNING);
+		if (!isset ($this->file)) {
+			throw new FileNotExistException ('File doesn\'t exist : '.$nameFile, MinzException::WARNING);
 		}
 	}
 	
@@ -31,32 +31,32 @@ class Model_txt {
 	 * Lit une ligne de $file
 	 * @return une ligne du fichier
 	 */
-	public function readLine() {
-		return fgets($this->file);
+	public function readLine () {
+		return fgets ($this->file);
 	}
 	
 	/**
 	 * Écrit une ligne dans $file
 	 * @param $line la ligne à écrire
 	 */
-	public function writeLine($line) {
-		fwrite($this->file, $line."\n"); 
+	public function writeLine ($line) {
+		fwrite ($this->file, $line."\n"); 
 	}
 	
 	/**
 	 * Efface le fichier $file
 	 * @return true en cas de succès, false sinon
 	 */
-	public function erase() {
-		return ftruncate($this->file, 0);
+	public function erase () {
+		return ftruncate ($this->file, 0);
 	}
 	
 	/**
 	 * Ferme $file
 	 */
-	public function __destruct() {
-		if(isset($this->file)) {
-			fclose($this->file);
+	public function __destruct () {
+		if (isset ($this->file)) {
+			fclose ($this->file);
 		}
 	}
 }

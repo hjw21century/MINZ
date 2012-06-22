@@ -18,16 +18,16 @@ class Model_sql {
 	 * Créé la connexion à la base de données à l'aide des variables
 	 * HOST, BASE, USER et PASS définies dans le fichier de configuration
 	 */
-	public function __construct() {
-		$db = Configuration::data_base();
+	public function __construct () {
+		$db = Configuration::data_base ();
 		try {
-			$this->bd = new PDO(
+			$this->bd = new PDO (
 				'mysql:host='.$db['host'].';dbname='.$db['base'],
 				$db['user'],
 				$db['password']
 			);
-		} catch(Exception $e) {
-			throw new SQLConnectionException('Access to database is denied', MinzException::WARNING);
+		} catch (Exception $e) {
+			throw new SQLConnectionException ('Access to database is denied', MinzException::WARNING);
 		}
 	}
 }

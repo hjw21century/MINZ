@@ -18,20 +18,20 @@ class Translate {
 	 * $translates est le tableau de correspondance
 	 *			  $key => $traduction
 	 */
-	private $translates = array();
+	private $translates = array ();
 	
 	/**
 	 * Inclus le fichier de langue qui va bien
 	 * l'enregistre dans $translates
 	 */
-	public function __construct($l = null) {
-		if(is_null($l)) {
-			$this->language = Configuration::language();
+	public function __construct ($l = null) {
+		if (is_null ($l)) {
+			$this->language = Configuration::language ();
 		}
 		
 		$l_path = APP_PATH.'/i18n/'.$this->language.'.php';
-		if(file_exists($l_path)) {
-			$this->translates = include($l_path);
+		if (file_exists ($l_path)) {
+			$this->translates = include ($l_path);
 		}
 	}
 	
@@ -41,10 +41,10 @@ class Translate {
 	 * @return la valeur correspondante à la clé
 	 *		 si non présente dans le tableau, on retourne la clé elle-même
 	 */ 
-	public function t($key) {
+	public function t ($key) {
 		$translate = $key;
 		
-		if(isset($this->translates[$key])) {
+		if (isset ($this->translates[$key])) {
 			$translate = $this->translates[$key];
 		}
 		

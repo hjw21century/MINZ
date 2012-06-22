@@ -53,29 +53,28 @@ class Configuration {
 	private static $cacheEnabled = true;
 	private static $delayCache = 3600;
 	
-	private static $db = array(
-							'host' => false,
-							'user' => false,
-							'password' => false,
-							'base' => false
-						);
+	private static $db = array ('host' => false,
+	                            'user' => false,
+	                            'password' => false,
+	                            'base' => false
+	                           );
 	
 	
 	/**
 	 * Permet de récupérer l'instance de Configuration
-	 * @param $params tableau des paramètres utiles :
-	 *				  configFile = chemin vers le fichier de conf
-	 *								(peut être à null si déjà instancié)
+	 * @param $configFile chemin vers le fichier de conf
+	 *                    peut être à null si déjà instancié
 	 * @return l'instance de Configuration
 	 */
-	public static function getInstance($configFile) {
-		if(is_null(self::$instance)) {
+	public static function getInstance ($configFile) {
+		if (is_null (self::$instance)) {
 			try {
-				self::$instance = new Configuration($configFile);
-			} catch(ConfigurationException $e) {
+				self::$instance = new Configuration ($configFile);
+			} catch (ConfigurationException $e) {
 				throw $e;
 			}
 		}
+		
 		return self::$instance;
 	}
 	
@@ -83,54 +82,58 @@ class Configuration {
 	/**
 	 * Initialise les variables de configuration
 	 * Attention : private car singleton
-	 * @param $params tableau des paramètres utiles :
-	 *				  configFile = chemin vers le fichier de conf
+	 * @param $configFile chemin vers le fichier de conf
 	 */
 	private function __construct($configFile) {
-		if(file_exists($configFile)) {
-
-			if(!$this->parseIniFile($configFile)
-			&& !$this->parseConstantesFile($configFile)) {
-				throw new ConfigurationException('Configuration File is incorrectly formatted. "environment" and "use_url_rewriting" are required', MinzException::ERROR);
+		if (file_exists ($configFile)) {
+			if (!$this->parseIniFile ($configFile)
+			 && !$this->parseConstantesFile ($configFile)) {
+				throw new ConfigurationException ('Configuration File is incorrectly formatted. "environment" and "use_url_rewriting" are required', MinzException::ERROR);
 			}
-
 		} else {
-			throw new FileNotExistException('File doesn\'t exist : '.$configFile, MinzException::ERROR);
+			throw new FileNotExistException ('File doesn\'t exist : '.$configFile, MinzException::ERROR);
 		}
 	}
 	
 	// GETTEURS
-	public static function environment() { return self::$environment; }
-	public static function domain() { return self::$domain; }
-	public static function title() { return self::$title; }
-	public static function use_layout() { return self::$layout; }
-	public static function use_url_rewriting() { return self::$use_url_rewriting; }
-	public static function data_base() { return self::$db; }
-	public static function language() {
+	public static function environment () { return self::$environment; }
+	public static function domain () { return self::$domain; }
+	public static function title () { return self::$title; }
+	public static function use_layout () { return self::$layout; }
+	public static function use_url_rewriting () { return self::$use_url_rewriting; }
+	public static function data_base () { return self::$db; }
+	public static function language () {
 		$l = self::$language;
 		
-		$l_session = Session::param('language');
-		if($l_session) {
+		$l_session = Session::param ('language');
+		if ($l_session) {
 			$l = $l_session;
 		}
 		
 		return $l;
 	}
-	public static function maxHistoryUrls() { return self::$maxHistoryUrls; }
-	public static function cacheEnabled() { return self::$cacheEnabled; }
-	public static function delayCache() { return self::$delayCache; }
+	public static function maxHistoryUrls () { return self::$maxHistoryUrls; }
+	public static function cacheEnabled () { return self::$cacheEnabled; }
+	public static function delayCache () { return self::$delayCache; }
 	
 	// SETTEURS
-	private function _environment($env) {
-		switch($env) {
-			case 'silent': self::$environment = Configuration::SILENT; break;
-			case 'production': self::$environment = Configuration::PRODUCTION; break;
-			case 'development': self::$environment = Configuration::DEVELOPMENT; break;
-			default: self::$environment = Configuration::PRODUCTION;
+	private function _environment ($env) {
+		switch ($env) {
+		case 'silent' :
+			self::$environment = Configuration::SILENT;
+			break;
+		case 'production' :
+			self::$environment = Configuration::PRODUCTION;
+			break;
+		case 'development' :
+			self::$environment = Configuration::DEVELOPMENT;
+			break;
+		default :
+			self::$environment = Configuration::PRODUCTION;
 		}
 	}
-	private function _maxHistoryUrls($max) {
-		if($max<2) {
+	private function _maxHistoryUrls ($max) {
+		if ($max<2) {
 			$max = 2;
 		}
 		self::$maxHistoryUrls = $max;
@@ -142,33 +145,33 @@ class Configuration {
 	 * @param $configFile chemin du fichier de config
 	 * @return true si tout s'est bien passé, false sinon
 	 */
-	private function parseConstantesFile($configFile) {
-		require_once($configFile);
+	private function parseConstantesFile ($configFile) {
+		require_once ($configFile);
 		
 		// ENVIRONMENT et USE_URL_REWRITING sont des variables indispensables
-		if(defined('ENVIRONMENT')) {
-			$this->_environment(ENVIRONMENT);
+		if (defined ('ENVIRONMENT')) {
+			$this->_environment (ENVIRONMENT);
 		} else {
 			return false;
 		}
-		if(defined('USE_URL_REWRITING')) {
+		if (defined ('USE_URL_REWRITING')) {
 			self::$use_url_rewriting = USE_URL_REWRITING;
 		} else {
 			return false;
 		}
 		
-		if(defined('DOMAIN')) self::$domain = DOMAIN;
-		if(defined('TITLE')) self::$title = TITLE;
-		if(defined('LAYOUT')) self::$layout = LAYOUT;
-		if(defined('LANGUAGE')) self::$language = LANGUAGE;
-		if(defined('MAX_HISTORY_URLS')) $this->_maxHistoryUrls(MAX_HISTORY_URLS);
-		if(defined('CACHE_ENABLED')) self::$cacheEnabled = CACHE_ENABLED;
-		if(defined('DELAY_CACHE')) self::$delayCache = DELAY_CACHE;
+		if (defined ('DOMAIN')) self::$domain = DOMAIN;
+		if (defined ('TITLE')) self::$title = TITLE;
+		if (defined ('LAYOUT')) self::$layout = LAYOUT;
+		if (defined ('LANGUAGE')) self::$language = LANGUAGE;
+		if (defined ('MAX_HISTORY_URLS')) $this->_maxHistoryUrls (MAX_HISTORY_URLS);
+		if (defined ('CACHE_ENABLED')) self::$cacheEnabled = CACHE_ENABLED;
+		if (defined ('DELAY_CACHE')) self::$delayCache = DELAY_CACHE;
 		
-		if(defined('DB_HOST')) self::$db['host'] = DB_HOST;
-		if(defined('DB_USER')) self::$db['user'] = DB_USER;
-		if(defined('DB_PASSWORD')) self::$db['password'] = DB_PASSWORD;
-		if(defined('DB_BASE')) self::$db['base'] = DB_BASE;
+		if (defined ('DB_HOST')) self::$db['host'] = DB_HOST;
+		if (defined ('DB_USER')) self::$db['user'] = DB_USER;
+		if (defined ('DB_PASSWORD')) self::$db['password'] = DB_PASSWORD;
+		if (defined ('DB_BASE')) self::$db['base'] = DB_BASE;
 		
 		return true;
 	}
@@ -178,11 +181,11 @@ class Configuration {
 	 * @param $configFile chemin du fichier de config
 	 * @return true si tout s'est bien passé, false sinon
 	 */
-	private function parseIniFile($configFile) {
-		$ini_array = @parse_ini_file($configFile, true);
+	private function parseIniFile ($configFile) {
+		$ini_array = @parse_ini_file ($configFile, true);
 		
 		// récupère la partie "general" du fichier .ini (indispensable)
-		if(isset($ini_array['general'])) {
+		if (isset ($ini_array['general'])) {
 			$general = $ini_array['general'];
 		} else {
 			return false;
@@ -190,37 +193,37 @@ class Configuration {
 		
 		// préparation si utilisation de la base de données
 		$db = false;
-		if(isset($ini_array['db'])) {
+		if (isset ($ini_array['db'])) {
 			$db = $ini_array['db'];
 		}
 		
 		// environment et use_url_rewriting sont des variables indispensables
-		if(isset($general['environment'])) {
-			$this->_environment($general['environment']);
+		if (isset ($general['environment'])) {
+			$this->_environment ($general['environment']);
 		} else {
 			return false;
 		}
 		
-		if(isset($general['use_url_rewriting'])) {
+		if (isset ($general['use_url_rewriting'])) {
 			self::$use_url_rewriting = $general['use_url_rewriting'];
 		} else {
 			return false;
 		}
 		
-		if(isset($general['domain'])) self::$domain = $general['domain'];
-		if(isset($general['title'])) self::$title = $general['title'];
-		if(isset($general['layout'])) self::$layout = $general['layout'];
-		if(isset($general['language'])) self::$language = $general['language'];
-		if(isset($general['max_history_urls'])) $this->_maxHistoryUrls($general['max_history_urls']);
-		if(isset($general['cache_enabled'])) self::$cacheEnabled = $general['cache_enabled'];
-		if(isset($general['delay_cache'])) self::$delayCache = $general['delay_cache'];
+		if (isset ($general['domain'])) self::$domain = $general['domain'];
+		if (isset ($general['title'])) self::$title = $general['title'];
+		if (isset ($general['layout'])) self::$layout = $general['layout'];
+		if (isset ($general['language'])) self::$language = $general['language'];
+		if (isset ($general['max_history_urls'])) $this->_maxHistoryUrls ($general['max_history_urls']);
+		if (isset ($general['cache_enabled'])) self::$cacheEnabled = $general['cache_enabled'];
+		if (isset ($general['delay_cache'])) self::$delayCache = $general['delay_cache'];
 		
-		if($db) {
+		if ($db) {
 			// il est nécessaire d'avoir défini ces variables pour la BD
-			if(!isset($db['host'])
-			|| !isset($db['user'])
-			|| !isset($db['password'])
-			|| !isset($db['base']) ) {
+			if (!isset ($db['host'])
+			 || !isset ($db['user'])
+			 || !isset ($db['password'])
+			 || !isset ($db['base']) ) {
 				return false;
 			}
 			

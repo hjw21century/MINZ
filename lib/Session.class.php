@@ -13,16 +13,16 @@ class Session {
 	/**
 	 * $session stocke les variables de session
 	 */
-	private static $session = array();
+	private static $session = array ();
 	
 	
 	/**
 	 * Permet de récupérer l'instance de Session
 	 * @return l'instance de Session
 	 */
-	public static function getInstance() {
-		if( is_null(self::$instance) ) {
-			self::$instance = new Session();
+	public static function getInstance () {
+		if (is_null (self::$instance)) {
+			self::$instance = new Session ();
 		}
 		return self::$instance;
 	}
@@ -31,12 +31,12 @@ class Session {
 	 * Démarre la session
 	 * Attention : private car singleton
 	 */
-	private function __construct() {
+	private function __construct () {
 		// démarre la session
-		session_name(md5(Configuration::domain()));
-		session_start();
+		session_name (md5 (Configuration::domain ()));
+		session_start ();
 		
-		if(isset($_SESSION)) {
+		if (isset ($_SESSION)) {
 			self::$session = $_SESSION;
 		}
 	}
@@ -47,8 +47,8 @@ class Session {
 	 * @param $p le paramètre à récupérer
 	 * @return la valeur de la variable de session, false si n'existe pas
 	 */
-	public static function param($p) {
-		if(isset(self::$session[$p])) {
+	public static function param ($p) {
+		if (isset (self::$session[$p])) {
 			$return = self::$session[$p];
 		} else {
 			$return = false;
@@ -63,10 +63,10 @@ class Session {
 	 * @param $p le paramètre à créer ou modifier
 	 * @param $v la valeur à attribuer, false pour supprimer
 	 */
-	public static function _param($p, $v=false) {
-		if(!$v) {
-			unset($_SESSION[$p]);
-			unset(self::$session[$p]);
+	public static function _param ($p, $v = false) {
+		if (!$v) {
+			unset ($_SESSION[$p]);
+			unset (self::$session[$p]);
 		} else {
 			$_SESSION[$p] = $v;
 			self::$session[$p] = $v;
@@ -78,18 +78,18 @@ class Session {
 	 * Permet d'effacer une session
 	 * @param $force si à false, n'efface pas l'historique ni le paramètre de langue
 	 */
-	public static function unset_session($force=false) {
-		if(!$force) {
-			$history = self::param('history');
-			$language = self::param('language');
+	public static function unset_session ($force = false) {
+		if (!$force) {
+			$history = self::param ('history');
+			$language = self::param ('language');
 		}
 		
-		session_unset();
-		self::$session = array();
+		session_unset ();
+		self::$session = array ();
 		
-		if(!$force) {
-			self::_param('history', $history);
-			self::_param('language', $language);
+		if (!$force) {
+			self::_param ('history', $history);
+			self::_param ('language', $language);
 		}
 	}
 }

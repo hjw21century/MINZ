@@ -11,7 +11,7 @@ class Model_array {
 	/**
 	 * $array Le tableau php contenu dans le fichier $nameFile
 	 */
-	protected $array = array();
+	protected $array = array ();
 	
 	/**
 	 * $nameFile Le nom du fichier
@@ -23,21 +23,21 @@ class Model_array {
 	 * @param $nameFile le nom du fichier à ouvrir contenant un tableau
 	 * Remarque : $array sera obligatoirement un tableau
 	 */
-	public function __construct($nameFile) {
-		if(!file_exists($nameFile)) {
-			$file = fopen($nameFile, 'a');
-			fclose($file);
+	public function __construct ($nameFile) {
+		if (!file_exists ($nameFile)) {
+			$file = fopen ($nameFile, 'a');
+			fclose ($file);
 		} else {
-			$file = file($nameFile);
-			if(isset($file[0])) {
-				$this->array = Helper::str2array($file[0]);
+			$file = file ($nameFile);
+			if (isset ($file[0])) {
+				$this->array = Helper::str2array ($file[0]);
 			}
 		}
 		
 		$this->nameFile = $nameFile;
 		
-		if(!is_array($this->array)) {
-			$this->array = array();
+		if(!is_array ($this->array)) {
+			$this->array = array ();
 		}
 	}
 	
@@ -45,15 +45,15 @@ class Model_array {
 	 * Écrit un tableau dans le fichier $nameFile
 	 * @param $array le tableau php à enregistrer
 	 **/
-	public function writeArray($array) {
-		if(!is_array($array)) {
-			$array = array();
+	public function writeArray ($array) {
+		if (!is_array ($array)) {
+			$array = array ();
 		}
 		
-		$txt = Helper::array2str($array);
+		$txt = Helper::array2str ($array);
 	
-		$file = fopen($this->nameFile, 'w');
-		fputs($file, $txt);
-		fclose($file);
+		$file = fopen ($this->nameFile, 'w');
+		fputs ($file, $txt);
+		fclose ($file);
 	}
 }

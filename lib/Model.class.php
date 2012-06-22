@@ -4,13 +4,12 @@
  * Sous licence AGPL3 <http://www.gnu.org/licenses/>
 */
 
-// inclure ici ?
-include_once('dao/Model_sql.class.php');
-include_once('dao/Model_txt.class.php');
-include_once('dao/Model_array.class.php');
-include_once('models/User.interface.php');
-include_once('models/User_openid.class.php');
-include_once('models/User_xmpp.class.php');
+include_once ('dao/Model_sql.class.php');
+include_once ('dao/Model_txt.class.php');
+include_once ('dao/Model_array.class.php');
+include_once ('models/User.interface.php');
+include_once ('models/User_openid.class.php');
+include_once ('models/User_xmpp.class.php');
 
 /**
  * La classe Model représente un modèle de l'application (représentation MVC)

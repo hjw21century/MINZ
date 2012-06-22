@@ -46,9 +46,9 @@ class Route {
 	 * Permet de récupérer l'instance de Route
 	 * @return l'instance de Route
 	 */
-	public static function getInstance() {
-		if( is_null(self::$instance) ) {
-			self::$instance = new Route();
+	public static function getInstance () {
+		if (is_null (self::$instance)) {
+			self::$instance = new Route ();
 		}
 		
 		return self::$instance;
@@ -58,27 +58,27 @@ class Route {
 	 * Initialise les variables $controller et $action
 	 * et charge le fichier de routes dans $routes
 	 */
-	private function __construct() {
+	private function __construct () {
 		// récupère les arguments pour le contrôleur et l'action
-		$this->controller = Helper::fetch_get('c', $this->default_controller);
-		$this->action = Helper::fetch_get('a', $this->default_action);
+		$this->controller = Helper::fetch_get ('c', $this->default_controller);
+		$this->action = Helper::fetch_get ('a', $this->default_action);
 		
-		$params = Helper::fetch_get();
-		foreach($params as $key => $param) {
-			if($key!='c' && $key!='a') {
+		$params = Helper::fetch_get ();
+		foreach ($params as $key => $param) {
+			if ($key != 'c' && $key != 'a') {
 				$this->params[$key] = $param;
 			}
 		}
 	
 		// Si un fichier de routes existe on le charge
 		// et qu'on souhaite utilise l'url_rewriting
-		if(Configuration::use_url_rewriting()
-		&& file_exists(APP_PATH.'/configuration/routes.php')) {
-			$this->routes = include(APP_PATH.'/configuration/routes.php');
+		if (Configuration::use_url_rewriting ()
+		 && file_exists (APP_PATH.'/configuration/routes.php')) {
+			$this->routes = include (APP_PATH.'/configuration/routes.php');
 		}
 			
-		if(!is_array($this->routes)) {
-			$this->routes = array();
+		if (!is_array ($this->routes)) {
+			$this->routes = array ();
 		}
 	}
 	
@@ -87,22 +87,22 @@ class Route {
 	 * et les routes définies dans le fichier
 	 * Modifie en conséquence $controller et $action
 	 */
-	public function run() {
-		if(isset($_SERVER['REQUEST_URI'])) {
+	public function run () {
+		if (isset ($_SERVER['REQUEST_URI'])) {
 			// url qui a amené ici
 			$url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 			
 			// on enlève la base de l'url définie dans la configuration
-			$url = substr($url, strlen(Configuration::domain()));
+			$url = substr ($url, strlen (Configuration::domain ()));
 			// on enlève le "/" final s'il y en a un
-			if(preg_match('#(.+)/$#i', $url)) {
-				$url = substr($url, 0, -1);
+			if (preg_match ('#(.+)/$#i', $url)) {
+				$url = substr ($url, 0, -1);
 			}
 			
 			$find = false;
 			$i = 0;
-			while($i<count($this->routes) && !$find) {
-				if($this->check($url, $this->routes[$i])) {
+			while ($i < count ($this->routes) && !$find) {
+				if ($this->check ($url, $this->routes[$i])) {
 					// notre url est présente dans le fichier de routes
 					$find = true;
 				}
@@ -110,14 +110,14 @@ class Route {
 			}
 			
 			// page non trouvée, erreur 404
-			if(!$find && $url!='/') {
+			if (!$find && $url != '/') {
 				$url = Configuration::domain().$url;
 				$txt = '';
-				if(isset($_SERVER['HTTP_REFERER'])) {
+				if (isset ($_SERVER['HTTP_REFERER'])) {
 					$txt = ' (previous page : '.$_SERVER['HTTP_REFERER'].')';
 				}
 				
-				throw new RouteNotFoundException('Route does\'nt exist : '.$url.$txt, MinzException::ERROR);
+				throw new RouteNotFoundException ('Route does\'nt exist : '.$url.$txt, MinzException::ERROR);
 			}
 		}
 	}
@@ -129,12 +129,12 @@ class Route {
 	 *	  $url['a'] = action
 	 *	  $url['params'] = tableau des paramètres supplémentaires, ou pas si pas de paramètres
 	 */
-	public function currentUrl() {
-		$url = array();
+	public function currentUrl () {
+		$url = array ();
 		$url['c'] = $this->controller;
 		$url['a'] = $this->action;
 		
-		if(!empty($this->params)) {
+		if (!empty ($this->params)) {
 			$url['params'] = $this->params;
 		}
 		
@@ -151,34 +151,38 @@ class Route {
 	 * @return la route formatée avec les * remplacés par leur valeur respective
 	 *		 false si la route n'est pas définie
 	 */
-	public function searchRoute($url) {
+	public function searchRoute ($url) {
 		$ok = true;
 		// on gère le cas où 'c' et/ou 'a' ne sont pas renseigné
-		if(!isset($url['c'])) $url['c'] = $this->default_controller;
-		if(!isset($url['a'])) $url['a'] = $this->default_action;
+		if (!isset ($url['c'])) $url['c'] = $this->default_controller;
+		if (!isset ($url['a'])) $url['a'] = $this->default_action;
 		
 		// on parcourt toutes les routes du fichier de routage
-		foreach($this->routes as $route) {
-			$params_explode = array();
+		foreach ($this->routes as $route) {
+			$params_explode = array ();
 			
 			//// 1ERE ETAPE : COMPARAISON DES URLS DANS LA TABLE DE ROUTAGE
 			// si controller ou action différent, alors ce n'est pas la bonne route
-			if($url['c']!=$route['controller']) $ok = false;
-			if($url['a']!=$route['action']) $ok = false;
+			if ($url['c'] != $route['controller']) {
+				$ok = false;
+			}
+			if ($url['a'] != $route['action']) {
+				$ok = false;
+			}
 			
 			// vérification existance des paramètres dans les deux variables
-			if(isset($url['params']) && !isset($route['params'])) {
+			if (isset ($url['params']) && !isset ($route['params'])) {
 				$ok = false;
-			} elseif(isset($route['params']) && !isset($url['params'])) {
+			} elseif (isset ($route['params']) && !isset ($url['params'])) {
 				$ok = false;
-			} elseif(isset($url['params']) && isset($route['params'])) {
+			} elseif (isset($url['params']) && isset ($route['params'])) {
 				// vérification même nombre de params
-				if(count($url['params'])==count($route['params'])) {
-					foreach($route['params'] as $key => $param) {
+				if (count ($url['params']) == count ($route['params'])) {
+					foreach ($route['params'] as $key => $param) {
 						// on vérifie si les params de la table de routage
 						// se retrouve dans $url
 						// si oui, on sauvegarde la valeur dans $params_explode
-						if(isset($url['params'][$param])) {
+						if (isset ($url['params'][$param])) {
 							$params_explode[$key] = $url['params'][$param];
 						} else {
 							$ok = false;
@@ -191,42 +195,58 @@ class Route {
 			
 			//// 2E ETAPE : CONSTRUCTION DE LA ROUTE
 			// les urls correspondent
-			if($ok) {
+			if ($ok) {
 				$route_string = '';
 				// récupère les différentes parties de la route
-				$route_explode = explode('/', $route['route']);
+				$route_explode = explode ('/', $route['route']);
 				$iParams = 0;
 				
 				// et on la reconstruit correctement
 				// en remplaçant les "*" par leur valeur correspondante
 				// stockée préalablement dans $params_explode
-				for($i=1; $i<count($route_explode); $i++) {
-					if($route_explode[$i]=='*') {
+				for ($i = 1; $i < count ($route_explode); $i++) {
+					if ($route_explode[$i] == '*') {
 						$route_string .= '/'.$params_explode[$iParams];
 						$iParams++;
+					} else {
+						$route_string .= '/'.$route_explode[$i];
 					}
-					else $route_string .= '/'.$route_explode[$i];
 				}
 				
 				// on retourne la route
 				return $route_string;
+			} else {
+				$ok = true;
 			}
-			else $ok = true;
 		}
 		
 		return false;
 	}
 	
 	// SETTEURS
-	public function _controller($controller) { $this->controller=$controller; }
-	public function _action($action) { $this->action=$action; }
+	public function _controller ($controller) {
+		$this->controller = $controller;
+	}
+	public function _action ($action) {
+		$this->action = $action;
+	}
 	
 	// GETTEURS
-	public function controller() { return $this->controller; }
-	public function action() { return $this->action; }
-	public function params() { return $this->params; }
-	public function defaultController() { return $this->default_controller; }
-	public function defaultAction() { return $this->default_action; }
+	public function controller () {
+		return $this->controller;
+	}
+	public function action () {
+		return $this->action;
+	}
+	public function params () {
+		return $this->params;
+	}
+	public function defaultController () {
+		return $this->default_controller;
+	}
+	public function defaultAction () {
+		return $this->default_action;
+	}
 	
 	/**
 	 * Compare une url et une route
@@ -235,48 +255,48 @@ class Route {
 	 * @param $route route à comparer
 	 * @return true si l'url et la route correspondent,false sinon
 	 */
-	private function check($url, $route) {
+	private function check ($url, $route) {
 		$idem = true;
 		$i = 0;
-		$params_explode = array();
+		$params_explode = array ();
 		
 		// récupère les différentes parties de la route et de l'url
 		// en séparant à chaque "/" (slash)	 
-		$route_explode = explode('/', $route['route']);
-		$url_explode = explode('/', $url);
+		$route_explode = explode ('/', $route['route']);
+		$url_explode = explode ('/', $url);
 		
 		//// 1ERE ETAPE : COMPARAISON DE L'URL ET DE LA ROUTE
 		// différents si pas le même nombre de paramètres
-		if(count($route_explode)!=count($url_explode)) {
-			$idem=false; 
+		if (count ($route_explode) != count ($url_explode)) {
+			$idem = false; 
 		}
 		
-		while( $idem && $i<count($route_explode) ) {
+		while ($idem && $i < count ($route_explode)) {
 			// différents si paramètres différents
-			if($route_explode[$i]!=$url_explode[$i]) {
+			if ($route_explode[$i] != $url_explode[$i]) {
 				$idem = false;
 			}
 			
 			// sauf si le paramètre de la route est une * (étoile/jocker) 
-			if($route_explode[$i]=='*') {
-				$idem=true;
+			if ($route_explode[$i] == '*') {
+				$idem = true;
 				// on sauvegarde le param correspondant au jocker
-				$params_explode[]=$url_explode[$i]; 
+				$params_explode[] = $url_explode[$i]; 
 			}
 			
 			$i++;
 		}
 		
 		//// 2E ETAPE : ATTRIBUTION CONTROLLER / ACTION / PARAMÈTRES
-		if($idem) {
+		if ($idem) {
 			// attribution controller et action
 			$this->controller = $route['controller'];
 			$this->action = $route['action'];
 			
 			// gestion des paramètres $_GET
-			if(isset($route['params'])
-			&& count($route['params'])==count($params_explode)) {
-				foreach($route['params'] as $key=>$param) {
+			if (isset ($route['params'])
+			 && count ($route['params']) == count ($params_explode)) {
+				foreach ($route['params'] as $key => $param) {
 					$_GET[$param] = $this->params[$param] = $params_explode[$key];
 				}
 			}
