@@ -6,6 +6,6 @@ version 1.1
  - revoir en profondeur (ou supprimer ?) Model_array
  - faire une analyse complète sur le fonctionnement général du framework
  - revoir les méthodes/classes *trop* compliquées
- - revoir noms méthodes (View par exemple -> has_layout)
+ x revoir noms méthodes (View par exemple -> has_layout) --> il en reste peut-être
  - étoffer la View
  x suppression classe History (ingérable techniquement)

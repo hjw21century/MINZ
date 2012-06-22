@@ -109,7 +109,7 @@ class View {
 	 * Indique si l'on utilise le layout
 	 * @return true si on l'utilise, false sinon
 	 */
-	public function has_layout () {
+	public function hasLayout () {
 		return $this->layout;
 	}
 	/**

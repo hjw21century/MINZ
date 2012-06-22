@@ -73,7 +73,7 @@ class Controller {
 			
 			// Affiche la vue (avec layout ou pas selon ce qui est demandé)
 			ob_start ();
-			if ($this->view->has_layout ()) {
+			if ($this->view->hasLayout ()) {
 				$this->view->renderWithLayout ();
 			} else {
 				$this->view->render ();
