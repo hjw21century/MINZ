@@ -10,13 +10,11 @@ class userController extends Controller {
 	const FORM_NOT_FILLED = -2;
  
 	public function firstAction() {
-		// on ne sauvegarde pas cette page dans l'historique
-		History::delete(History::CURRENT_PAGE);
 	}
 	  
 	public function lastAction() {
 		// on redirige à la page précédente avec le code retour approprié
-		$url = History::back(0);
+		$url = array ('c'=>'index', 'a'=>'index', 'params'=>array());
 		
 		if($this->codeRetour != false) {
 			$url['params']['retour'] = $this->codeRetour;

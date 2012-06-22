@@ -18,8 +18,6 @@ class logController extends Controller {
 	}
 	
 	public function viderAction() {
-		History::delete(History::CURRENT_PAGE);
-		
 		$logDAO = new LogDAO();
 		$logDAO->erase();
 		

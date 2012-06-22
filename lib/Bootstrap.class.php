@@ -96,7 +96,6 @@ class Bootstrap {
 		}
 		
 		require ('Route.class.php');
-		require ('History.class.php');
 		require ('Session.class.php');
 		require ('Url.class.php');
 		require ('Controller.class.php');
@@ -138,9 +137,6 @@ class Bootstrap {
 				Error::error (404, array ('error'=>array ('Page Not Found : '.$url)));
 			}
 		}
-		
-		// enregistre historique
-		History::put ($this->route->currentUrl ());
 		
 		try {
 			$this->run ();

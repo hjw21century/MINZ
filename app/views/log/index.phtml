@@ -1,5 +1,5 @@
 <ul class="pagination">
-	<li class="pager-item"><a href="<?php echo $this->url->display(History::back(History::PREVIOUS_PAGE, array())); ?>"><?php echo $this->translate->t('go back'); ?></a></li>
+	<li class="pager-item"><a href="<?php echo $this->url->display(array ('c'=>'index', 'a'=>'index', 'params'=>array())); ?>"><?php echo $this->translate->t('go back'); ?></a></li>
 </ul>
 
 <h1><?php echo $this->translate->t('read logs'); ?></h1>

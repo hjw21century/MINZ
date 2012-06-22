@@ -28,15 +28,12 @@ class indexController extends Controller {
 	}
 	
 	public function changeLanguageAction() {
-		// on ne sauvegarde pas dans l'historique cette page
-		History::delete(History::CURRENT_PAGE);
-		
 		$l = Helper::fetch_get('l');
 		
 		if($l && in_array($l, array('en','fr'))) {
 			Session::_param('language', $l);
 		}
 		
-		header('Location: '.$this->view->url->display(History::back(0)));
+		header('Location: '.$this->view->url->display(array ()));
 	}
 }

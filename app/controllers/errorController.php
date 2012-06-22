@@ -2,12 +2,6 @@
 		
 class errorController extends Controller {
 	public function errorAction() {
-		// on ne sauvegarde pas dans l'historique la page d'erreur
-		$url = History::back(History::CURRENT_PAGE);
-		if($url['c']=='error' && $url['a']=='error') {
-			History::delete(History::CURRENT_PAGE);
-		}
-		
 		$this->view->appendTitle($this->view->translate->t('error').' - ');
 		
 		$type = Helper::fetch_get('type', null);
