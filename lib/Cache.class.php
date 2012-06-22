@@ -101,7 +101,7 @@ class Cache {
 				unlink (CACHE_PATH.'/'.$fic);
 			}
 		}
-		// TODO changer CACHE_PATH par files
-		closedir (CACHE_PATH);
+		
+		closedir ($files);
 	}
 }
