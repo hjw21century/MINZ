@@ -3,7 +3,7 @@ version 1.1
  x supprimer libs openid et xmpp
  x supprimer models User_openid et User_xmpp
  - revoir l'url rewriting pour le rendre plus flexible
- - revoir en profondeur (ou supprimer ?) Model_array
+ x revoir en profondeur (ou supprimer ?) Model_array --> supprimé
  - faire une analyse complète sur le fonctionnement général du framework
  - revoir les méthodes/classes *trop* compliquées
  x revoir noms méthodes (View par exemple -> has_layout) --> il en reste peut-être

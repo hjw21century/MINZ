@@ -54,37 +54,6 @@ class Helper {
 		return preg_replace ($search, $replace, mb_strtolower ($in));
 	}
 	
-	function array2str ($array, $level=1) {
-		$str = array ();
-		foreach ($array as $key=>$value) {
-			$nkey = base64_encode ($key);
-			$nvalue = is_array ($value)?'$'.base64_encode(Helper::array2str($value)) : (string)base64_encode($value);
-			$str[] = $nkey.'&'.$nvalue;
-		}
-		return implode('|',$str);
-	}
-	
-	function str2array($str) {
-		$rest = array();
-		if(strpos($str,'|')>0) {
-			$array = explode('|',$str);
-		} else {
-			$array=array($str);
-		}
-		
-		foreach($array as $token) {
-			if($token!="\n") {
-				list($key,$value) = explode('&',$token);
-				if(!empty($key)) {
-					$nkey=base64_decode($key);  
-					$nvalue = (	substr($value,0,1) != '$' ? base64_decode($value) : Helper::str2array(base64_decode(substr($value,1))) );
-					$rest[$nkey] = $nvalue;
-				}
-			}
-		}
-		return $rest;
-	}
-	
 	/**
 	 * Annule les effets des magic_quotes pour une variable donnée
 	 * @param $var variable à traiter (tableau ou simple variable)
