@@ -17,10 +17,17 @@ INSTALLATION
 
 [si ça ne fonctionne pas]
  4) Pensez à regarder les logs PHP et les logs de l'application (encore que les logs PHP seront beaucoup plus complets)
- 5) Si vraiment ça ne marche pas, contactez-moi (contact@marienfressinaud.fr) et je pourrais peut-être vous aider :)
+ 5) Si vraiment ça ne marche pas, contactez-moi (dev@marienfressinaud.fr) et je pourrai peut-être vous aider :)
 
 
 ========
+CHANGELOG
+2012-06-24 Changes with MINZ 1.1.0 :
+ *) Reprise de toute l'architecture / classes (direction version 2.0)
+ *) Amélioration de l'url rewriting basé maintenant sur des regex
+ *) Regressions par rapport aux versions précédentes (plus compatibles)
+ *) Version pas encore tout à fait fonctionnelle
+ 
 CHANGELOG
 2012-02-18 Changes with MINZ 1.0.0 :
  *) Ajout de la classe Cache

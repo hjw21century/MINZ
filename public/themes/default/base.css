@@ -37,7 +37,10 @@ form {
 	textarea {
 		display: block; width: 500px; height: 150px; line-height: 150%;
 		}
-	
+p {
+	line-height: 150%;
+	}
+
 body {
 	background: #fafafa; color: #222; font-family: Cantarell,"Lucida Grande","Lucida Sans Unicode",Verdana,Arial,sans-serif; font-size: 95%; text-align: justify;
 	}
@@ -48,8 +51,8 @@ body {
 			font-size: 90%; color: #666;
 			}
 		#header h1 {
-			margin: 0; padding: 5px 0 5px 20px;
-			background: #fff; border: 1px solid #ccc; border-radius: 20px; font-size: 140%;
+			margin: 0; padding: 5px;
+			background: #fff; border: 1px solid #ccc; border-radius: 20px; font-size: 140%; text-align: center;
 			}
 			#header h1 a {
 				color: #222;
@@ -68,7 +71,7 @@ body {
 	
 /*** PAGINATION ***/
 .pagination {
-	margin: 0;
+	margin: 0; padding: 5px;
 	list-style: none; text-align: center; font-size: 100%;
 	}
 	.pagination li {
@@ -82,8 +85,8 @@ body {
 	border: 1px solid #aaa; background: #eee;
 	}
 	.logs .log {
-		width: 98%; margin: 0; padding: 5px 1%; overflow: auto;
-		background: #fafafa; border: none; border-bottom: 1px solid #999; color: #333; font-weight: normal; box-shadow: none; text-align: left;
+		width: 96%; margin: 0; padding: 5px 2%; overflow: auto;
+		background: #fafafa; border: none; border-bottom: 1px solid #999; color: #333; font-weight: normal; box-shadow: none; text-align: left; font-size: 90%;
 		}
 		.logs .log .date {
 			display: block;

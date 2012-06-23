@@ -8,7 +8,7 @@ return array (
 		'params'        => array('l')
 	),
 	array(
-		'route'         => '/(\d)-logs',
+		'route'         => '/(\d+)-logs',
 		'controller'    => 'log',
 		'action'        => 'index',
 		'params'        => array('page')
