@@ -19,22 +19,16 @@
 # ***** END LICENSE BLOCK *****
 
 // Constantes de chemins
-define('PUBLIC_PATH', realpath(dirname(__FILE__)));
-define('LIB_PATH', realpath(PUBLIC_PATH.'/../lib'));
-define('APP_PATH', realpath(PUBLIC_PATH.'/../app'));
-define('LOG_PATH', realpath(PUBLIC_PATH.'/../log'));
-define('CACHE_PATH', realpath(PUBLIC_PATH.'/../cache'));
+define ('PUBLIC_PATH', realpath (dirname(__FILE__)));
+define ('LIB_PATH', realpath (PUBLIC_PATH.'/../lib'));
+define ('APP_PATH', realpath (PUBLIC_PATH.'/../app'));
+define ('LOG_PATH', realpath (PUBLIC_PATH.'/../log'));
+define ('CACHE_PATH', realpath (PUBLIC_PATH.'/../cache'));
 
-// Ajout du répertoire /lib dans l'include_path
-set_include_path(get_include_path() . PATH_SEPARATOR . LIB_PATH);
+set_include_path (get_include_path () . PATH_SEPARATOR . LIB_PATH);
 
-// Paramètres du lancement de l'application
-$params = array(
-    'config_file'   => APP_PATH.'/configuration/application.ini'
-);
+require_once(APP_PATH.'/App_FrontController.php');
 
-require_once('Bootstrap.class.php');
-
-$bootstrap = Bootstrap::getInstance($params);
-$bootstrap->init(); // lancement de l'application
-
+$front_controller = new App_FrontController ();
+$front_controller->init ();
+$front_controller->run ();

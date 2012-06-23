@@ -2,16 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-			<link rel="icon" type="image/ico" href="<?php echo $this->url->display();?>/favicon.ico" />
-			<?php echo $this->headTitle(); ?>
-			<?php echo $this->headStyle(); ?>
-			<?php echo $this->headScript(); ?>
+		<link rel="icon" type="image/ico" href="<?php echo Url::display ('/favicon.ico'); ?>" />
+		<?php echo self::headTitle(); ?>
+		<?php echo self::headStyle(); ?>
 	</head>
 	<body>
-<?php $this->partial('header'); ?>
+<?php $this->partial ('header'); ?>
 
 <div id="global">
-<?php $this->render(); ?>
+<?php $this->render (); ?>
 </div>
 	</body>
 </html>

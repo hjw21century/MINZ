@@ -9,40 +9,6 @@
  */
 class Helper {
 	/**
-	 * Permet de récupérer une variable de type $_GET[]
-	 * @param $param nom de la variable (si false, renvoie $_GET)
-	 * @param $default valeur par défaut à attribuer à la variable (false par défaut)
-	 */
-	public static function fetch_get ($param = false, $default = false) {
-		if ($param == false) {
-			return $_GET;
-		} elseif (isset ($_GET[$param])) {
-			return $_GET[$param];
-		} elseif ($default || is_array ($default)) {
-			return $default;
-		} else {
-			return false;
-		}
-	}
-	
-	/**
-	 * Permet de récupérer une variable de type $_POST[]
-	 * @param $param nom de la variable (si false, renvoie $_POST)
-	 * @param $default valeur par défaut à attribuer à la variable (false par défaut)
-	 */
-	public static function fetch_post ($param = false, $default = false) {
-		if ($param == false) {
-			return $_POST;
-		} elseif (isset ($_POST[$param])) {
-			return $_POST[$param];
-		} elseif ($default || is_array ($default)) {
-			return $default;
-		} else {
-			return false;
-		}
-	}
-	
-	/**
 	 * Filtre les caractères spéciaux d'une chaîne
 	 * @param $in chaîne à filtrer
 	 * @return la chaîne filtrée contenant uniquement des a-z, A-Z, 0-9 et _

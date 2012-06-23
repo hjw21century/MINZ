@@ -6,34 +6,16 @@
  */
 class Session {
 	/**
-	 * $instance représente l'instance de Session
-	 */
-	private static $instance = null;
-	
-	/**
 	 * $session stocke les variables de session
 	 */
 	private static $session = array ();
 	
-	
 	/**
-	 * Permet de récupérer l'instance de Session
-	 * @return l'instance de Session
+	 * Initialise la session
 	 */
-	public static function getInstance () {
-		if (is_null (self::$instance)) {
-			self::$instance = new Session ();
-		}
-		return self::$instance;
-	}
-	
-	/**
-	 * Démarre la session
-	 * Attention : private car singleton
-	 */
-	private function __construct () {
+	public static function init () {
 		// démarre la session
-		session_name (md5 (Configuration::domain ()));
+		session_name (md5 (Configuration::selApplication ()));
 		session_start ();
 		
 		if (isset ($_SESSION)) {
@@ -47,11 +29,11 @@ class Session {
 	 * @param $p le paramètre à récupérer
 	 * @return la valeur de la variable de session, false si n'existe pas
 	 */
-	public static function param ($p) {
+	public static function param ($p, $default = false) {
 		if (isset (self::$session[$p])) {
 			$return = self::$session[$p];
 		} else {
-			$return = false;
+			$return = $default;
 		}
 		
 		return $return;
@@ -64,7 +46,7 @@ class Session {
 	 * @param $v la valeur à attribuer, false pour supprimer
 	 */
 	public static function _param ($p, $v = false) {
-		if (!$v) {
+		if ($v === false) {
 			unset ($_SESSION[$p]);
 			unset (self::$session[$p]);
 		} else {
@@ -80,7 +62,6 @@ class Session {
 	 */
 	public static function unset_session ($force = false) {
 		if (!$force) {
-			$history = self::param ('history');
 			$language = self::param ('language');
 		}
 		
@@ -88,7 +69,6 @@ class Session {
 		self::$session = array ();
 		
 		if (!$force) {
-			self::_param ('history', $history);
 			self::_param ('language', $language);
 		}
 	}

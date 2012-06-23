@@ -12,27 +12,31 @@ class Translate {
 	/**
 	 * $language est la langue à afficher
 	 */
-	private $language;
+	private static $language;
 	
 	/**
 	 * $translates est le tableau de correspondance
-	 *			  $key => $traduction
+	 * 	$key => $traduction
 	 */
-	private $translates = array ();
+	private static $translates = array ();
 	
 	/**
 	 * Inclus le fichier de langue qui va bien
 	 * l'enregistre dans $translates
 	 */
-	public function __construct ($l = null) {
-		if (is_null ($l)) {
-			$this->language = Configuration::language ();
-		}
+	public static function init () {
+		$l = Configuration::language ();
+		self::$language = Session::param ('language', $l);
 		
-		$l_path = APP_PATH.'/i18n/'.$this->language.'.php';
+		$l_path = APP_PATH.'/i18n/'.self::$language.'.php';
+		
 		if (file_exists ($l_path)) {
-			$this->translates = include ($l_path);
+			self::$translates = include ($l_path);
 		}
+	}
+	
+	public static function reset () {
+		self::init ();
 	}
 	
 	/**
@@ -41,13 +45,17 @@ class Translate {
 	 * @return la valeur correspondante à la clé
 	 *		 si non présente dans le tableau, on retourne la clé elle-même
 	 */ 
-	public function t ($key) {
+	public static function t ($key) {
 		$translate = $key;
 		
-		if (isset ($this->translates[$key])) {
-			$translate = $this->translates[$key];
+		if (isset (self::$translates[$key])) {
+			$translate = self::$translates[$key];
 		}
 		
 		return $translate;
+	}
+	
+	public static function language () {
+		return self::$language;
 	}
 }

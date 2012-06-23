@@ -1,31 +1,34 @@
 <?php
 
-class User implements UserInterface {
-	private $mail = '';
-	private $username = '';
+class User {
 	private $id = 0;
+	private $username = '';
 
-	public function __construct($id='', $redirectUrl='') {
+	public function __construct ($id, $username) {
+		$this->id = $id;
+		$this->username = $username;
+	}
+
+	public function id () {
+		return $this->id;
+	}
+	public function _id ($id) {
+		if ($id < 0) {
+			$id = 0;
+		}
+		
 		$this->id = $id;
 	}
 
-	public function username() { return $this->username; }
-	public function mail() { return $this->mail; }
-	public function _username($username) { $this->username=$username; }
-	public function _mail($mail) { $this->mail=$mail; }
-	
-	public function login () {
-	
+	public function username () {
+		return $this->username;
 	}
-	public function logout () {
-	
+	public function _username ($username) {
+		$this->username = $username;
 	}
+	
 	public function isLogged () {
-	
-	}
-	
-	public function id () {
-		return $id;
+		return false;
 	}
 }
 
