@@ -54,6 +54,8 @@ class FrontController {
 		require ('Configuration.php');
 		require ('Dispatcher.php');
 		require ('Log.php');
+		require ('Model.php');
+		require ('Paginator.php');
 		require ('Request.php');
 		require ('Response.php');
 		require ('Router.php');

@@ -11,7 +11,7 @@
 			<?php echo Translate::t ('Français'); ?>
 			</a>
 		<?php } ?>
-		- <a href="<?php echo Url::display (array ('c' => 'log')); ?>">Logs</a>
+		- <a href="<?php echo Url::display (array ('c' => 'log', 'params' => array ('page' => 1))); ?>">Logs</a>
 	</p>
 	<h1><a href="<?php echo Url::display (); ?>"><?php echo View::title (); ?></a></h1>
 </div>

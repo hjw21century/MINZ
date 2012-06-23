@@ -17,5 +17,6 @@ class App_FrontController extends FrontController {
 	
 	private function loadModels () {
 		include (APP_PATH . '/models/User.php');
+		include (APP_PATH . '/models/Log.php');
 	}
 }
