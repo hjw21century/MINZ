@@ -21,16 +21,21 @@ class Router {
 	public function __construct () {
 		if (Configuration::useUrlRewriting ()) {
 			if (file_exists (APP_PATH . self::ROUTES_PATH_NAME)) {
-				$routes = include (APP_PATH . self::ROUTES_PATH_NAME);
+				$routes = include (
+					APP_PATH . self::ROUTES_PATH_NAME
+				);
 		
 				if (!is_array ($routes)) {
 					$routes = array ();
 				}
-			
-				$this->routes = $routes;
+				
+				$this->routes = array_map (
+					array ('Url', 'checkUrl'),
+					$routes
+				);
 			} else {
 				throw new FileNotExistException (
-					APP_PATH . self::ROUTES_PATH_NAME,
+					self::ROUTES_PATH_NAME,
 					MinzException::ERROR
 				);
 			}
@@ -40,25 +45,32 @@ class Router {
 	/**
 	 * Initialise le Router en déterminant le couple Controller / Action
 	 * Mets à jour la Request
+	 * @exception RouteNotFoundException si l'uri n'est pas présente dans
+	 *          > la table de routage
 	 */
 	public function init () {
 		$url = array ();
 		
 		if (Configuration::useUrlRewriting ()) {
-			$url = $this->buildWithRewriting ();
+			try {
+				$url = $this->buildWithRewriting ();
+			} catch (RouteNotFoundException $e) {
+				throw $e;
+			}
 		} else {
 			$url = $this->buildWithoutRewriting ();
 		}
 		
-		$url['params'] = array_merge ($url['params'], Request::fetchPOST ());
+		$url['params'] = array_merge (
+			$url['params'],
+			Request::fetchPOST ()
+		);
 		
-		Request::_controllerName ($url['c']);
-		Request::_actionName ($url['a']);
-		Request::_params ($url['params']);
+		Request::forward ($url);
 	}
 	
 	/**
-	 * Retourne un tableau représentant une url
+	 * Retourne un tableau représentant l'url passée par la barre d'adresses
 	 * Ne se base PAS sur la table de routage
 	 * @return tableau représentant l'url
 	 */
@@ -83,30 +95,40 @@ class Router {
 	}
 	
 	/**
-	 * Retourne un tableau représentant une url
+	 * Retourne un tableau représentant l'url passée par la barre d'adresses
 	 * Se base sur la table de routage
 	 * @return tableau représentant l'url
+	 * @exception RouteNotFoundException si l'uri n'est pas présente dans
+	 *          > la table de routage
 	 */
 	public function buildWithRewriting () {
 		$url = array ();
-		
 		$uri = Request::getURI ();
+		$find = false;
 		
 		foreach ($this->routes as $route) {
-			$regex = '*' . $route['route'] . '*';
+			$regex = '*^' . $route['route'] . '$*';
 			if (preg_match ($regex, $uri, $matches)) {
 				$url['c'] = $route['controller'];
 				$url['a'] = $route['action'];
-				$url['params'] = $this->getParams($route['params'], $matches);
+				$url['params'] = $this->getParams(
+					$route['params'],
+					$matches
+				);
+				$find = true;
 				break;
 			}
 		}
 		
-		if (empty ($url)) {
-			$url['c'] = Request::defaultControllerName ();
-			$url['a'] = Request::defaultActionName ();
-			$url['params'] = array ();
+		if (!$find && $uri != '/') {
+			throw new RouteNotFoundException (
+				$uri,
+				MinzException::ERROR
+			);
 		}
+		
+		// post-traitement
+		$url = Url::checkUrl ($url);
 		
 		return $url;
 	}
@@ -114,7 +136,7 @@ class Router {
 	/**
 	 * Retourne l'uri d'une url en se basant sur la table de routage
 	 * @param l'url sous forme de tableau
-	 * @return l'uri formaté (string) selon une route trouvée
+	 * @return l'uri formatée (string) selon une route trouvée
 	 */
 	public function printUriRewrited ($url) {
 		$route = $this->searchRoute ($url);
@@ -134,14 +156,19 @@ class Router {
 	 */
 	public function searchRoute ($url) {
 		foreach ($this->routes as $route) {
-			$params = array_flip ($route['params']);
-			$difference_params = array_diff_key ($url['params'],
-			                                     $params);
-			
 			if ($route['controller'] == $url['c']
-			 && $route['action'] == $url['a']
-			 && empty ($difference_params)) {
-				return $route;
+			 && $route['action'] == $url['a']) {
+				// calcule la différence des tableaux de params
+				$params = array_flip ($route['params']);
+				$difference_params = array_diff_key (
+					$params,
+					$url['params']
+				);
+				
+				// TODO vérifier cas où $params est vide et pas $url['params']
+				if (empty ($difference_params)) {
+					return $route;
+				}
 			}
 		}
 		
@@ -149,8 +176,10 @@ class Router {
 	}
 	
 	/**
-	 * Récupère un tableau dont les clés sont définies dans $params_route et les valeurs sont situées dans $matches
-	 * Utilisée buildWithRewriting -> le tableau $matches est décalé de 1 par rapport à $params_route
+	 * Récupère un tableau dont
+	 * 	- les clés sont définies dans $params_route
+	 *	- les valeurs sont situées dans $matches
+	 * Le tableau $matches est décalé de +1 par rapport à $params_route
 	 */
 	private function getParams($params_route, $matches) {
 		$params = array ();
@@ -165,7 +194,7 @@ class Router {
 	
 	/**
 	 * Remplace les éléments de la route par les valeurs contenues dans $url
-	 * TODO Fonction très sale ! À revoir
+	 * TODO Fonction très sale ! À revoir (preg_replace ?)
 	 */
 	private function replaceParams ($route, $url) {
 		$uri = '';
@@ -174,11 +203,13 @@ class Router {
 		
 		// parcourt caractère par caractère
 	 	for ($i = 0; $i < strlen ($route['route']); $i++) {
-	 		// on détecte qu'on rentre dans des parenthèses => on va devoir changer par la valeur d'un paramètre
+			// on détecte qu'on rentre dans des parenthèses
+			// on va devoir changer par la valeur d'un paramètre
 	 		if ($route['route'][$i] == '(') {
 	 			$in_brackets = true;
 	 		}
-	 		// on sort des parenthèses => ok, on change le paramètre maintenant
+			// on sort des parenthèses
+			// ok, on change le paramètre maintenant
 	 		if ($route['route'][$i] == ')') {
 	 			$in_brackets = false;
 	 			$param = $route['params'][$num_param];
@@ -187,7 +218,8 @@ class Router {
 	 		}
 	 		
 	 		if (!$in_brackets && $route['route'][$i] != ')') {
-	 			// on est pas dans les parenthèses => on recopie simplement le caractère
+				// on est pas dans les parenthèses
+				// on recopie simplement le caractère
  				$uri .= $route['route'][$i];
 	 		}
 	 	}

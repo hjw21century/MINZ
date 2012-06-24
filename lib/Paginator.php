@@ -44,7 +44,7 @@ class Paginator {
 	 * @param $getteur variable de type $_GET[] permettant de retrouver la page
 	 */
 	public function render ($view, $getteur) {
-		$view = APP_PATH.'/views/helpers/'.$view;
+		$view = APP_PATH . '/views/helpers/'.$view;
 		
 		if (file_exists ($view)) {
 			include ($view);

@@ -4,8 +4,6 @@
  * Sous licence AGPL3 <http://www.gnu.org/licenses/>
 */
 
-include ('dao/Model_txt.php');
-
 /**
  * La classe Model représente un modèle de l'application (représentation MVC)
  */

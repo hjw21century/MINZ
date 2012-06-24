@@ -58,12 +58,10 @@ class Session {
 	
 	/**
 	 * Permet d'effacer une session
-	 * @param $force si à false, n'efface pas l'historique ni le paramètre de langue
+	 * @param $force si à false, n'efface pas le paramètre de langue
 	 */
 	public static function unset_session ($force = false) {
-		if (!$force) {
-			$language = self::param ('language');
-		}
+		$language = self::param ('language');
 		
 		session_unset ();
 		self::$session = array ();

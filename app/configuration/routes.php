@@ -1,16 +1,37 @@
 <?php
 
 return array (
-	array(
-		'route'         => '/(.+)-langue',
+	array (
+		'route'         => '/login',
+		'controller'    => 'index',
+		'action'        => 'login'
+	),
+	array (
+		'route'         => '/logout',
+		'controller'    => 'index',
+		'action'        => 'logout'
+	),
+	array (
+		'route'         => '/([a-z]{2})-langue',
 		'controller'    => 'index',
 		'action'        => 'changeLanguage',
-		'params'        => array('l')
+		'params'        => array ('l')
 	),
-	array(
+	array (
 		'route'         => '/(\d+)-logs',
 		'controller'    => 'log',
 		'action'        => 'index',
-		'params'        => array('page')
+		'params'        => array ('page')
+	),
+	array (
+		'route'         => '/vider-logs',
+		'controller'    => 'log',
+		'action'        => 'vider'
+	),
+	array (
+		'route'         => '/retour-(\d)',
+		'controller'    => 'index',
+		'action'        => 'index',
+		'params'        => array ('retour')
 	),
 );

@@ -28,6 +28,7 @@ class FrontController {
 	
 	/**
 	 * Constructeur
+	 * Initialise le router et le dispatcher
 	 */
 	public function __construct () {
 		$this->loadLib ();
@@ -38,12 +39,18 @@ class FrontController {
 			
 			$this->router = new Router ();
 			$this->router->init ();
-		
-			$this->dispatcher = Dispatcher::getInstance ($this->router);
+		} catch (RouteNotFoundException $e) {
+			Log::record ($e->getMessage (), Log::ERROR);
+			Error::error (
+				404,
+				array ('error' => array ($e->getMessage ()))
+			);
 		} catch (MinzException $e) {
 			Log::record ($e->getMessage (), Log::ERROR);
 			$this->killApp ();
 		}
+		
+		$this->dispatcher = Dispatcher::getInstance ($this->router);
 	}
 	
 	/**
@@ -51,8 +58,11 @@ class FrontController {
 	 */
 	private function loadLib () {
 		require ('ActionController.php');
+		require ('Cache.php');
 		require ('Configuration.php');
 		require ('Dispatcher.php');
+		require ('Error.php');
+		require ('Helper.php');
 		require ('Log.php');
 		require ('Model.php');
 		require ('Paginator.php');
@@ -64,16 +74,14 @@ class FrontController {
 		require ('Url.php');
 		require ('View.php');
 		
+		require ('dao/Model_pdo.php');
+		require ('dao/Model_txt.php');
+		
 		require ('exceptions/MinzException.php');
 	}
 	
 	/**
-	 * Initialise le FrontController
-	 */
-	public function init () { }
-	
-	/**
-	 * Démarre l'application
+	 * Démarre l'application (lance le dispatcher et renvoie la réponse
 	 */
 	public function run () {
 		try {

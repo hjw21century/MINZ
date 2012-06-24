@@ -14,4 +14,11 @@ class logController extends ActionController {
 		
 		View::prependTitle (Translate::t ('read logs') . ' - ');
 	}
+	
+	public function viderAction () {
+		$logDAO = new LogDAO ();
+		$logDAO->erase ();
+		
+		Request::forward (array ('c' => 'log'));
+	}
 }

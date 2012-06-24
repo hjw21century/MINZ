@@ -110,9 +110,9 @@ class Request {
 		self::$reseted = true;
 		$url = Url::checkUrl ($url);
 		
-		self::_controllerName ($url ['c']);
-		self::_actionName ($url ['a']);
-		self::_params ($url ['params']);
+		self::_controllerName ($url['c']);
+		self::_actionName ($url['a']);
+		self::_params ($url['params']);
 	}
 	
 	/**
@@ -163,6 +163,10 @@ class Request {
 			$_POST = Helper::stripslashes_r ($_POST);
 			$_COOKIE = Helper::stripslashes_r ($_COOKIE);
 		}
+	}
+	
+	public static function isPost () {
+		return !empty ($_POST);
 	}
 }
 
