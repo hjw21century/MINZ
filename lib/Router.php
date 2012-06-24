@@ -45,12 +45,18 @@ class Router {
 	/**
 	 * Initialise le Router en déterminant le couple Controller / Action
 	 * Mets à jour la Request
+	 * @exception RouteNotFoundException si l'uri n'est pas présente dans
+	 *          > la table de routage
 	 */
 	public function init () {
 		$url = array ();
 		
 		if (Configuration::useUrlRewriting ()) {
-			$url = $this->buildWithRewriting ();
+			try {
+				$url = $this->buildWithRewriting ();
+			} catch (RouteNotFoundException $e) {
+				throw $e;
+			}
 		} else {
 			$url = $this->buildWithoutRewriting ();
 		}
@@ -92,13 +98,16 @@ class Router {
 	 * Retourne un tableau représentant l'url passée par la barre d'adresses
 	 * Se base sur la table de routage
 	 * @return tableau représentant l'url
+	 * @exception RouteNotFoundException si l'uri n'est pas présente dans
+	 *          > la table de routage
 	 */
 	public function buildWithRewriting () {
 		$url = array ();
 		$uri = Request::getURI ();
+		$find = false;
 		
 		foreach ($this->routes as $route) {
-			$regex = '*' . $route['route'] . '*';
+			$regex = '*^' . $route['route'] . '$*';
 			if (preg_match ($regex, $uri, $matches)) {
 				$url['c'] = $route['controller'];
 				$url['a'] = $route['action'];
@@ -106,8 +115,16 @@ class Router {
 					$route['params'],
 					$matches
 				);
+				$find = true;
 				break;
 			}
+		}
+		
+		if (!$find && $uri != '/') {
+			throw new RouteNotFoundException (
+				$uri,
+				MinzException::ERROR
+			);
 		}
 		
 		// post-traitement

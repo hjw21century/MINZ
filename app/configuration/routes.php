@@ -12,7 +12,7 @@ return array (
 		'action'        => 'logout'
 	),
 	array (
-		'route'         => '/(.+)-langue',
+		'route'         => '/([a-z]{2})-langue',
 		'controller'    => 'index',
 		'action'        => 'changeLanguage',
 		'params'        => array ('l')

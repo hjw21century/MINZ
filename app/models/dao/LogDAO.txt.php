@@ -1,7 +1,5 @@
 <?php
 
-include(APP_PATH.'/models/helper/HelperLog.php');
-
 class LogDAO extends Model_txt {
 	
 	public function __construct () {

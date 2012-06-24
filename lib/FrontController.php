@@ -39,14 +39,18 @@ class FrontController {
 			
 			$this->router = new Router ();
 			$this->router->init ();
-		
-			$this->dispatcher = Dispatcher::getInstance (
-				$this->router
+		} catch (RouteNotFoundException $e) {
+			Log::record ($e->getMessage (), Log::ERROR);
+			Error::error (
+				404,
+				array ('error' => array ($e->getMessage ()))
 			);
 		} catch (MinzException $e) {
 			Log::record ($e->getMessage (), Log::ERROR);
 			$this->killApp ();
 		}
+		
+		$this->dispatcher = Dispatcher::getInstance ($this->router);
 	}
 	
 	/**
@@ -56,6 +60,7 @@ class FrontController {
 		require ('ActionController.php');
 		require ('Configuration.php');
 		require ('Dispatcher.php');
+		require ('Error.php');
 		require ('Helper.php');
 		require ('Log.php');
 		require ('Model.php');

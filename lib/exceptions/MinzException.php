@@ -55,4 +55,19 @@ class ActionException extends MinzException {
 		parent::__construct ($message, $code);
 	}
 }
+class RouteNotFoundException extends MinzException {
+	private $route;
+	
+	public function __construct ($route, $code = 0) {
+		$this->route = $route;
+		
+		$message = '`' . $route . '` not found';
+		
+		parent::__construct ($message, $code);
+	}
+	
+	public function route () {
+		return $this->route;
+	}
+}
 class SQLConnectionException extends MinzException { }
