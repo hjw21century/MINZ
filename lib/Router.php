@@ -52,9 +52,7 @@ class Router {
 		
 		$url['params'] = array_merge ($url['params'], Request::fetchPOST ());
 		
-		Request::_controllerName ($url['c']);
-		Request::_actionName ($url['a']);
-		Request::_params ($url['params']);
+		Request::forward ($url);
 	}
 	
 	/**
@@ -102,11 +100,7 @@ class Router {
 			}
 		}
 		
-		if (empty ($url)) {
-			$url['c'] = Request::defaultControllerName ();
-			$url['a'] = Request::defaultActionName ();
-			$url['params'] = array ();
-		}
+		$url = Url::checkUrl ($url);
 		
 		return $url;
 	}

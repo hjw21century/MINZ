@@ -110,9 +110,9 @@ class Request {
 		self::$reseted = true;
 		$url = Url::checkUrl ($url);
 		
-		self::_controllerName ($url ['c']);
-		self::_actionName ($url ['a']);
-		self::_params ($url ['params']);
+		self::_controllerName ($url['c']);
+		self::_actionName ($url['a']);
+		self::_params ($url['params']);
 	}
 	
 	/**
