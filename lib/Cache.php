@@ -24,17 +24,20 @@ class Cache {
 	private static $enabled = true;
 	
 	/**
-	 * Constructeur - initialise $
+	 * Constructeur
 	 */
 	public function __construct () {
 		$this->_fileName ();
 		$this->_expire ();
 	}
 	
+	/**
+	 * Setteurs
+	 */
 	public function _fileName () {
 		$file = md5 (Request::getURI ());
 		
-		$this->file = APP_PATH . CACHE_PATH.'/'.$file;
+		$this->file = CACHE_PATH . '/'.$file;
 	}
 	
 	public function _expire () {
@@ -53,10 +56,13 @@ class Cache {
 	}
 	
 	/**
-	 * Inverse l'activation du cache
+	 * Active / désactive le cache
 	 */
-	public static function switchCache () {
-		self::$enabled = !self::$enabled;
+	public static function switchOn () {
+		self::$enabled = true;
+	}
+	public static function switchOff () {
+		self::$enabled = false;
 	}
 	
 	/**
@@ -93,6 +99,9 @@ class Cache {
 		return file_exists ($this->file);
 	}
 	
+	/**
+	 * Nettoie le cache en supprimant tous les fichiers
+	 */
 	public static function clean () {
 		$files = opendir (CACHE_PATH);
 		

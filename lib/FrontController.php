@@ -58,6 +58,7 @@ class FrontController {
 	 */
 	private function loadLib () {
 		require ('ActionController.php');
+		require ('Cache.php');
 		require ('Configuration.php');
 		require ('Dispatcher.php');
 		require ('Error.php');
