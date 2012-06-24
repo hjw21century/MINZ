@@ -17,13 +17,17 @@ class Model_txt {
 	 * Ouvre un fichier dans $file
 	 * @param $nameFile nom du fichier à ouvrir
 	 * @param $mode mode d'ouverture du fichier ('a+' par défaut)
-	 * @exception Exception quand le fichier n'existe pas ou ne peux pas être ouvert
+	 * @exception FileNotExistException si le fichier n'existe pas
+	 *          > ou ne peux pas être ouvert
 	 */
 	public function __construct ($nameFile, $mode = 'a+') {
 		$this->file = fopen ($nameFile, $mode);
 		
 		if (!isset ($this->file)) {
-			throw new FileNotExistException ($nameFile, MinzException::WARNING);
+			throw new FileNotExistException (
+				$nameFile,
+				MinzException::WARNING
+			);
 		}
 	}
 	
@@ -40,7 +44,7 @@ class Model_txt {
 	 * @param $line la ligne à écrire
 	 */
 	public function writeLine ($line) {
-		fwrite ($this->file, $line."\n"); 
+		fwrite ($this->file, $line . "\n");
 	}
 	
 	/**

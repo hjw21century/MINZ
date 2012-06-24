@@ -116,7 +116,10 @@ class Configuration {
 				MinzException::ERROR
 			);
 		}
-		$ini_array = parse_ini_file (APP_PATH . self::CONF_PATH_NAME, true);
+		$ini_array = parse_ini_file (
+			APP_PATH . self::CONF_PATH_NAME,
+			true
+		);
 		
 		// [general] est obligatoire
 		if (!isset ($ini_array['general'])) {

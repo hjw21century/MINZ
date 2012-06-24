@@ -25,7 +25,11 @@ define ('APP_PATH', realpath (PUBLIC_PATH.'/../app'));
 define ('LOG_PATH', realpath (PUBLIC_PATH.'/../log'));
 define ('CACHE_PATH', realpath (PUBLIC_PATH.'/../cache'));
 
-set_include_path (get_include_path () . PATH_SEPARATOR . LIB_PATH);
+set_include_path (get_include_path ()
+                 . PATH_SEPARATOR
+                 . LIB_PATH
+                 . PATH_SEPARATOR
+                 . APP_PATH);
 
 require_once(APP_PATH.'/App_FrontController.php');
 

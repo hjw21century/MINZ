@@ -28,13 +28,16 @@ class Translate {
 		$l = Configuration::language ();
 		self::$language = Session::param ('language', $l);
 		
-		$l_path = APP_PATH.'/i18n/'.self::$language.'.php';
+		$l_path = APP_PATH . '/i18n/' . self::$language . '.php';
 		
 		if (file_exists ($l_path)) {
 			self::$translates = include ($l_path);
 		}
 	}
 	
+	/**
+	 * Alias de init
+	 */
 	public static function reset () {
 		self::init ();
 	}
@@ -43,7 +46,7 @@ class Translate {
 	 * Traduit une clé en sa valeur du tableau $translates
 	 * @param $key la clé à traduire
 	 * @return la valeur correspondante à la clé
-	 *		 si non présente dans le tableau, on retourne la clé elle-même
+	 *       > si non présente dans le tableau, on retourne la clé elle-même
 	 */ 
 	public static function t ($key) {
 		$translate = $key;
@@ -55,6 +58,10 @@ class Translate {
 		return $translate;
 	}
 	
+	/**
+	 * Retourne la langue utilisée actuellement
+	 * @return la langue
+	 */
 	public static function language () {
 		return self::$language;
 	}

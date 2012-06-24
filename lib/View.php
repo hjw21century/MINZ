@@ -18,18 +18,28 @@ class View {
 	private static $title = '';
 	private static $styles = array ();
 	
+	/**
+	 * Constructeur
+	 * Détermine si on utilise un layout ou non
+	 */
 	public function __construct () {
-		$this->view_filename = APP_PATH . self::VIEWS_PATH_NAME . '/'
+		$this->view_filename = APP_PATH
+		                     . self::VIEWS_PATH_NAME . '/'
 		                     . Request::controllerName () . '/'
 		                     . Request::actionName () . '.phtml';
 		
-		if (file_exists (APP_PATH . self::LAYOUT_PATH_NAME . self::LAYOUT_FILENAME)) {
+		if (file_exists (APP_PATH
+		               . self::LAYOUT_PATH_NAME
+		               . self::LAYOUT_FILENAME)) {
 			$this->use_layout = true;
 		}
 		
 		self::$title = Configuration::title ();
 	}
 	
+	/**
+	 * Construit la vue
+	 */
 	public function build () {
 		if ($this->use_layout) {
 			$this->buildLayout ();
@@ -38,28 +48,52 @@ class View {
 		}
 	}
 	
+	/**
+	 * Construit le layout
+	 */
 	public function buildLayout () {
-		include (APP_PATH . self::LAYOUT_PATH_NAME . self::LAYOUT_FILENAME);
+		include (
+			APP_PATH
+			. self::LAYOUT_PATH_NAME
+			. self::LAYOUT_FILENAME
+		);
 	}
 	
+	/**
+	 * Affiche la Vue en elle-même
+	 */
 	public function render () {
 		if (file_exists ($this->view_filename)) {
 			include ($this->view_filename);
 		} else {
-			Log::record ('File doesn\'t exist : `' . $this->view_filename . '`', Log::WARNING);
+			Log::record ('File doesn\'t exist : `'
+			            . $this->view_filename . '`',
+			            Log::WARNING);
 		}
 	}
 	
-	public function partial ($file) {
-		$fic_partial = APP_PATH . self::LAYOUT_PATH_NAME.'/'.$file.'.phtml';
+	/**
+	 * Ajoute un élément du layout
+	 * @param $part l'élément partial à ajouter
+	 */
+	public function partial ($part) {
+		$fic_partial = APP_PATH
+		             . self::LAYOUT_PATH_NAME . '/'
+		             . $part . '.phtml';
 		
 		if (file_exists ($fic_partial)) {
 			include ($fic_partial);
 		} else {
-			Log::record ('File doesn\'t exist : `' . $fic_partial . '`', Log::WARNING);
+			Log::record ('File doesn\'t exist : `'
+			            . $fic_partial . '`',
+			            Log::WARNING);
 		}
 	}
 	
+	/**
+	 * Permet de choisir si on souhaite utiliser le layout
+	 * @param $use true si on souhaite utiliser le layout, false sinon
+	 */
 	public function _useLayout ($use) {
 		$this->use_layout = $use;
 	}

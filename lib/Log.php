@@ -35,7 +35,7 @@ class Log {
 		       || ($env == Configuration::PRODUCTION
 		       && ($level == Log::WARNING || $level == Log::NOTICE)))) {
 			if (is_null ($file)) {
-				$file = LOG_PATH.'/application.log';
+				$file = LOG_PATH . '/application.log';
 			}
 			
 			switch ($level) {

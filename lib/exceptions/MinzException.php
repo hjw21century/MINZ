@@ -25,31 +25,34 @@ class FileNotExistException extends MinzException {
 }
 class BadConfigurationException extends MinzException {
 	public function __construct ($part_missing, $code = 0) {
-		$message = '`' . $part_missing . '` in the configuration file is missing';
+		$message = '`' . $part_missing
+		         . '` in the configuration file is missing';
 		
 		parent::__construct ($message, $code);
 	}
 }
 class ControllerNotExistException extends MinzException {
 	public function __construct ($controller_name, $code = 0) {
-		$message = 'Controller `' . $controller_name . '` doesn\'t exist';
+		$message = 'Controller `' . $controller_name
+		         . '` doesn\'t exist';
 		
 		parent::__construct ($message, $code);
 	}
 }
 class ControllerNotActionControllerException extends MinzException {
 	public function __construct ($controller_name, $code = 0) {
-		$message = 'Controller `' . $controller_name . '` isn\'t instance of ActionController';
+		$message = 'Controller `' . $controller_name
+		         . '` isn\'t instance of ActionController';
 		
 		parent::__construct ($message, $code);
 	}
 }
 class ActionException extends MinzException {
 	public function __construct ($controller_name, $action_name, $code = 0) {
-		$message = '`' . $action_name . '` cannot be invoked on `' . $controller_name . '`';
+		$message = '`' . $action_name . '` cannot be invoked on `'
+		         . $controller_name . '`';
 		
 		parent::__construct ($message, $code);
 	}
 }
 class SQLConnectionException extends MinzException { }
-class RouteNotFoundException extends MinzException { }

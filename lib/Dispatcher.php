@@ -12,12 +12,15 @@
 class Dispatcher {
 	const CONTROLLERS_PATH_NAME = '/controllers';
 	
+	/* singleton */
 	private static $instance = null;
 	
 	private $router;
 	private $controller;
-	private $view;
 	
+	/**
+	 * Récupère l'instance du Dispatcher
+	 */
 	public static function getInstance ($router) {
 		if (is_null (self::$instance)) {
 			self::$instance = new Dispatcher ($router);
@@ -25,22 +28,35 @@ class Dispatcher {
 		return self::$instance;
 	}
 
+	/**
+	 * Constructeur
+	 */
 	private function __construct ($router) {
 		$this->router = $router;
 	}
 	
+	/**
+	 * Lance le controller indiqué dans Request
+	 * Remplit le body de Response à partir de la Vue
+	 * @exception MinzException
+	 */
 	public function run () {
 		while (Request::$reseted) {
 			Request::$reseted = false;
 			
 			// TODO Gérer le système de Cache
 			try {
-				$this->createController (Request::controllerName () . 'Controller');
+				$this->createController (
+					Request::controllerName ()
+					. 'Controller'
+				);
 				
 				ob_start ();
 				$this->controller->init ();
 				$this->controller->firstAction ();
-				$this->launchAction (Request::actionName () . 'Action');
+				$this->launchAction (
+					Request::actionName () . 'Action'
+				);
 				$this->controller->lastAction ();
 				$this->controller->view ()->build ();
 				$text = ob_get_clean();
@@ -49,9 +65,18 @@ class Dispatcher {
 			}
 		}
 		
-		Response::appendBody ($text);
+		Response::setBody ($text);
 	}
 	
+	/**
+	 * Instancie le Controller
+	 * @param $controller_name le nom du controller à instancier
+	 * @exception FileNotExistException le fichier correspondant au
+	 *          > controller n'existe pas
+	 * @exception ControllerNotExistException le controller n'existe pas
+	 * @exception ControllerNotActionControllerException controller n'est
+	 *          > pas une instance de ActionController
+	 */
 	private function createController ($controller_name) {
 		$filename = APP_PATH . self::CONTROLLERS_PATH_NAME . '/'
 		          . $controller_name . '.php';
@@ -80,6 +105,12 @@ class Dispatcher {
 		}
 	}
 	
+	/**
+	 * Lance l'action sur le controller du dispatcher
+	 * @param $action_name le nom de l'action
+	 * @exception ActionException si on ne peut pas exécuter l'action sur
+	 *          > le controller
+	 */
 	private function launchAction ($action_name) {
 		if (!is_callable (array ($this->controller, $action_name))) {
 			throw new ActionException (

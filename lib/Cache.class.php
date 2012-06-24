@@ -32,9 +32,9 @@ class Cache {
 	}
 	
 	public function _fileName () {
-		$file = md5 ($_SERVER['REQUEST_URI']);
+		$file = md5 (Request::getURI ());
 		
-		$this->file = CACHE_PATH.'/'.$file;
+		$this->file = APP_PATH . CACHE_PATH.'/'.$file;
 	}
 	
 	public function _expire () {

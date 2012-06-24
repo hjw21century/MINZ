@@ -28,6 +28,7 @@ class FrontController {
 	
 	/**
 	 * Constructeur
+	 * Initialise le router et le dispatcher
 	 */
 	public function __construct () {
 		$this->loadLib ();
@@ -39,7 +40,9 @@ class FrontController {
 			$this->router = new Router ();
 			$this->router->init ();
 		
-			$this->dispatcher = Dispatcher::getInstance ($this->router);
+			$this->dispatcher = Dispatcher::getInstance (
+				$this->router
+			);
 		} catch (MinzException $e) {
 			Log::record ($e->getMessage (), Log::ERROR);
 			$this->killApp ();
@@ -68,12 +71,7 @@ class FrontController {
 	}
 	
 	/**
-	 * Initialise le FrontController
-	 */
-	public function init () { }
-	
-	/**
-	 * Démarre l'application
+	 * Démarre l'application (lance le dispatcher et renvoie la réponse
 	 */
 	public function run () {
 		try {
