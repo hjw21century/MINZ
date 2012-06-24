@@ -1,12 +1,10 @@
 <?php
 
 class User {
-	private $id = 0;
-	private $username = '';
+	private $id = '';
 
-	public function __construct ($id, $username) {
-		$this->id = $id;
-		$this->username = $username;
+	public function __construct () {
+		$this->id = Session::param ('id', '');
 	}
 
 	public function id () {
@@ -27,8 +25,17 @@ class User {
 		$this->username = $username;
 	}
 	
+	public function login ($id) {
+		$this->_id ($id);
+		Session::_param ('id', $this->id);
+	}
+	
+	public function logout () {
+		Session::_param ('id');
+	}
+	
 	public function isLogged () {
-		return false;
+		return Session::param ('id') !== false;
 	}
 }
 

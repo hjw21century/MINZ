@@ -164,6 +164,10 @@ class Request {
 			$_COOKIE = Helper::stripslashes_r ($_COOKIE);
 		}
 	}
+	
+	public static function isPost () {
+		return !empty ($_POST);
+	}
 }
 
 

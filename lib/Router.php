@@ -28,8 +28,11 @@ class Router {
 				if (!is_array ($routes)) {
 					$routes = array ();
 				}
-			
-				$this->routes = $routes;
+				
+				$this->routes = array_map (
+					array ('Url', 'checkUrl'),
+					$routes
+				);
 			} else {
 				throw new FileNotExistException (
 					self::ROUTES_PATH_NAME,
@@ -141,10 +144,11 @@ class Router {
 				// calcule la différence des tableaux de params
 				$params = array_flip ($route['params']);
 				$difference_params = array_diff_key (
-					$url['params'],
-					$params
+					$params,
+					$url['params']
 				);
-
+				
+				// TODO vérifier cas où $params est vide et pas $url['params']
 				if (empty ($difference_params)) {
 					return $route;
 				}
