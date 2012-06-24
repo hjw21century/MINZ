@@ -8,7 +8,7 @@
  * La classe Model_sql représente le modèle interragissant avec les bases de données
  * Seul la connexion MySQL est prise en charge pour le moment
  */
-class Model_sql {
+class Model_pdo {
 	/**
 	 * $bd variable représentant la base de données
 	 */
@@ -18,16 +18,22 @@ class Model_sql {
 	 * Créé la connexion à la base de données à l'aide des variables
 	 * HOST, BASE, USER et PASS définies dans le fichier de configuration
 	 */
-	public function __construct () {
-		$db = Configuration::data_base ();
+	public function __construct ($type) {
+		$db = Configuration::dataBase ();
 		try {
+			$string = $type
+			        . ':host=' . $db['host']
+				. ';dbname=' . $db['base'];
 			$this->bd = new PDO (
-				'mysql:host='.$db['host'].';dbname='.$db['base'],
+				$string,
 				$db['user'],
 				$db['password']
 			);
 		} catch (Exception $e) {
-			throw new SQLConnectionException ('Access to database is denied', MinzException::WARNING);
+			throw new PDOConnectionException (
+				$string,
+				$db['user'], MinzException::WARNING
+			);
 		}
 	}
 }

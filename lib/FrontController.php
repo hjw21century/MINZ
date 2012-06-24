@@ -74,6 +74,9 @@ class FrontController {
 		require ('Url.php');
 		require ('View.php');
 		
+		require ('dao/Model_pdo.php');
+		require ('dao/Model_txt.php');
+		
 		require ('exceptions/MinzException.php');
 	}
 	

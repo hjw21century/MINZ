@@ -70,4 +70,11 @@ class RouteNotFoundException extends MinzException {
 		return $this->route;
 	}
 }
-class SQLConnectionException extends MinzException { }
+class PDOConnectionException extends MinzException {
+	public function __construct ($string_connection, $user, $code = 0) {
+		$message = 'Access to database is denied for `' . $user . '`'
+		         . ' (`' . $string_connection . '`)';
+		
+		parent::__construct ($message, $code);
+	}
+}

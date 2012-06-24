@@ -1,7 +1,6 @@
 <?php
 
 class LogDAO extends Model_txt {
-	
 	public function __construct () {
 		parent::__construct (LOG_PATH . '/application.log', 'r+');
 	}
