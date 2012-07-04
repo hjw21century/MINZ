@@ -41,32 +41,42 @@ class Dispatcher {
 	 * @exception MinzException
 	 */
 	public function run () {
-		while (Request::$reseted) {
-			Request::$reseted = false;
+		$cache = new Cache();
+		
+		if (Cache::isEnabled () && !$cache->expired ()) {
+			ob_start ();
+			$cache->render ();
+			$text = ob_get_clean();
+		} else {
+			while (Request::$reseted) {
+				Request::$reseted = false;
 			
-			// TODO Gérer le système de Cache
-			try {
-				$this->createController (
-					Request::controllerName ()
-					. 'Controller'
-				);
+				// TODO Gérer le système de Cache
+				try {
+					$this->createController (
+						Request::controllerName ()
+						. 'Controller'
+					);
 				
-				ob_start ();
-				$this->controller->init ();
-				$this->controller->firstAction ();
-				$this->launchAction (
-					Request::actionName () . 'Action'
-				);
-				$this->controller->lastAction ();
-				$this->controller->view ()->build ();
-				$text = ob_get_clean();
-			} catch (MinzException $e) {
-				throw $e;
+					$this->controller->init ();
+					$this->controller->firstAction ();
+					$this->launchAction (
+						Request::actionName () . 'Action'
+					);
+					$this->controller->lastAction ();
+				
+					ob_start ();
+					$this->controller->view ()->build ();
+					$text = ob_get_clean();
+				} catch (MinzException $e) {
+					throw $e;
+				}
 			}
 		}
 		
 		Response::setBody ($text);
 	}
+	
 	
 	/**
 	 * Instancie le Controller
