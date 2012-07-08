@@ -151,7 +151,7 @@ class View {
 	public static function headScript () {
 		$scripts = '';
 
-		foreach ($this->scripts as $script) {
+		foreach (self::$scripts as $script) {
 			$scripts .= '<script type="text/javascript"';
 			$scripts .= ' src="' . $script['url'] . '">';
 			$scripts .= '</script>' . "\n";

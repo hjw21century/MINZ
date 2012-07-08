@@ -16,6 +16,13 @@ class MinzException extends Exception {
 	}
 }
 
+class PermissionDeniedException extends MinzException {
+	public function __construct ($file_name, $code = 0) {
+		$message = 'Permission is denied for `' . $file_name.'`';
+		
+		parent::__construct ($message, $code);
+	}
+}
 class FileNotExistException extends MinzException {
 	public function __construct ($file_name, $code = 0) {
 		$message = 'File doesn\'t exist : `' . $file_name.'`';
@@ -61,7 +68,7 @@ class RouteNotFoundException extends MinzException {
 	public function __construct ($route, $code = 0) {
 		$this->route = $route;
 		
-		$message = '`' . $route . '` not found';
+		$message = 'Route `' . $route . '` not found';
 		
 		parent::__construct ($message, $code);
 	}
