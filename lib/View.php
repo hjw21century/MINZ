@@ -17,6 +17,7 @@ class View {
 	
 	private static $title = '';
 	private static $styles = array ();
+	private static $scripts = array ();
 	
 	/**
 	 * Constructeur
@@ -125,8 +126,8 @@ class View {
 
 		foreach(self::$styles as $style) {
 			$styles .= '<link rel="stylesheet" type="text/css"';
-			$styles .= ' media="'.$style['media'].'"';
-			$styles .= ' href="'.$style['url'].'" />'."\n";
+			$styles .= ' media="' . $style['media'] . '"';
+			$styles .= ' href="' . $style['url'] . '" />' . "\n";
 		}
 
 		return $styles;
@@ -141,6 +142,31 @@ class View {
 		self::$styles[] = array (
 			'url' => $url,
 			'media' => $media
+		);
+	}
+	
+	/**
+	 * Gestion des scripts JS
+	 */
+	public static function headScript () {
+		$scripts = '';
+
+		foreach ($this->scripts as $script) {
+			$scripts .= '<script type="text/javascript"';
+			$scripts .= ' src="' . $script['url'] . '">';
+			$scripts .= '</script>' . "\n";
+		}
+
+		return $scripts;
+	}
+	public static function prependScript ($url) {
+		array_unshift(self::$scripts, array (
+			'url' => $url
+		));
+	}
+	public static function appendScript ($url) {
+		self::$scripts[] = array (
+			'url' => $url
 		);
 	}
 }
