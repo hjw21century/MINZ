@@ -23,7 +23,7 @@ class Model_pdo {
 		try {
 			$string = $type
 			        . ':host=' . $db['host']
-				. ';dbname=' . $db['base'];
+			        . ';dbname=' . $db['base'];
 			$this->bd = new PDO (
 				$string,
 				$db['user'],

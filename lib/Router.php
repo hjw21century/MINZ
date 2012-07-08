@@ -111,7 +111,7 @@ class Router {
 			if (preg_match ($regex, $uri, $matches)) {
 				$url['c'] = $route['controller'];
 				$url['a'] = $route['action'];
-				$url['params'] = $this->getParams(
+				$url['params'] = $this->getParams (
 					$route['params'],
 					$matches
 				);
