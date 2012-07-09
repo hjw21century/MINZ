@@ -112,7 +112,10 @@ class Request {
 		
 		self::_controllerName ($url['c']);
 		self::_actionName ($url['a']);
-		self::_params ($url['params']);
+		self::_params (array_merge (
+			self::$params,
+			$url['params']
+		));
 	}
 	
 	/**
