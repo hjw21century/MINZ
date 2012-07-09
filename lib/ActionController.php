@@ -19,6 +19,7 @@ class ActionController {
 	public function __construct ($router) {
 		$this->router = $router;
 		$this->view = new View ();
+		$this->view->attributeParams ();
 	}
 
 	/**

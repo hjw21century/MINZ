@@ -19,6 +19,8 @@ class View {
 	private static $styles = array ();
 	private static $scripts = array ();
 	
+	private static $params = array ();
+	
 	/**
 	 * Constructeur
 	 * Détermine si on utilise un layout ou non
@@ -168,6 +170,18 @@ class View {
 		self::$scripts[] = array (
 			'url' => $url
 		);
+	}
+	
+	/**
+	 * Gestion des paramètres ajoutés à la vue
+	 */
+	public static function _param ($key, $value) {
+		self::$params[$key] = $value;
+	}
+	public function attributeParams () {
+		foreach (View::$params as $key => $value) {
+			$this->$key = $value;
+		}
 	}
 }
 
