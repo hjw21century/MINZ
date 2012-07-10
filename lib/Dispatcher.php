@@ -124,16 +124,21 @@ class Dispatcher {
 	 *          > le controller
 	 */
 	private function launchAction ($action_name) {
-		if (!is_callable (array ($this->controller, $action_name))) {
-			throw new ActionException (
-				get_class ($this->controller),
-				$action_name,
-				MinzException::ERROR
-			);
+		if (!Request::$reseted) {
+			if (!is_callable (array (
+				$this->controller,
+				$action_name
+			))) {
+				throw new ActionException (
+					get_class ($this->controller),
+					$action_name,
+					MinzException::ERROR
+				);
+			}
+			call_user_func (array (
+				$this->controller,
+				$action_name
+			));
 		}
-		call_user_func (array (
-			$this->controller,
-			$action_name
-		));
 	}
 }
