@@ -50,8 +50,7 @@ class Dispatcher {
 		} else {
 			while (Request::$reseted) {
 				Request::$reseted = false;
-			
-				// TODO Gérer le système de Cache
+				
 				try {
 					$this->createController (
 						Request::controllerName ()
@@ -64,10 +63,12 @@ class Dispatcher {
 						Request::actionName () . 'Action'
 					);
 					$this->controller->lastAction ();
-				
-					ob_start ();
-					$this->controller->view ()->build ();
-					$text = ob_get_clean();
+					
+					if (!Request::$reseted) {
+						ob_start ();
+						$this->controller->view ()->build ();
+						$text = ob_get_clean();
+					}
 				} catch (MinzException $e) {
 					throw $e;
 				}
