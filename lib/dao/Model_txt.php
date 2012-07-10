@@ -43,8 +43,13 @@ class Model_txt {
 	 * Écrit une ligne dans $file
 	 * @param $line la ligne à écrire
 	 */
-	public function writeLine ($line) {
-		fwrite ($this->file, $line . "\n");
+	public function writeLine ($line, $newLine = true) {
+		$char = '';
+		if ($newLine) {
+			$char = "\n";
+		}
+		
+		fwrite ($this->file, $line . $char);
 	}
 	
 	/**
