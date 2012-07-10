@@ -60,7 +60,8 @@ class Dispatcher {
 					$this->controller->init ();
 					$this->controller->firstAction ();
 					$this->launchAction (
-						Request::actionName () . 'Action'
+						Request::actionName ()
+						. 'Action'
 					);
 					$this->controller->lastAction ();
 					

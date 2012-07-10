@@ -105,17 +105,26 @@ class Request {
 	
 	/**
 	 * Relance une requête
+	 * @param $url l'url vers laquelle est relancée la requête
+	 * @param $redirect si vrai, force la redirection http
+	 *                > sinon, le dispatcher recharge en interne
 	 */
-	public static function forward ($url = array ()) {
-		self::$reseted = true;
+	public static function forward ($url = array (), $redirect = false) {
 		$url = Url::checkUrl ($url);
 		
-		self::_controllerName ($url['c']);
-		self::_actionName ($url['a']);
-		self::_params (array_merge (
-			self::$params,
-			$url['params']
-		));
+		if ($redirect) {
+			header ('Location: ' . Url::display ($url));
+			exit ();
+		} else {
+			self::$reseted = true;
+		
+			self::_controllerName ($url['c']);
+			self::_actionName ($url['a']);
+			self::_params (array_merge (
+				self::$params,
+				$url['params']
+			));
+		}
 	}
 	
 	/**
