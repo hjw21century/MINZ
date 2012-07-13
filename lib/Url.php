@@ -20,7 +20,7 @@ class Url {
 		
 		$url_string = '';
 		
-		if (isset ($url['protocol'])) {
+		if (is_array ($url) && isset ($url['protocol'])) {
 			$protocol = $url['protocol'];
 		} else {
 			$protocol = 'http';
