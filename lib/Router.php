@@ -199,6 +199,7 @@ class Router {
 	private function replaceParams ($route, $url) {
 		$uri = '';
 		$in_brackets = false;
+		$backslash = false;
 		$num_param = 0;
 		
 		// parcourt caractère par caractère
@@ -210,14 +211,22 @@ class Router {
 	 		}
 			// on sort des parenthèses
 			// ok, on change le paramètre maintenant
-	 		if ($route['route'][$i] == ')') {
-	 			$in_brackets = false;
-	 			$param = $route['params'][$num_param];
+			if ($route['route'][$i] == ')') {
+				$in_brackets = false;
+				$param = $route['params'][$num_param];
  				$uri .= $url['params'][$param];
  				$num_param++;
-	 		}
-	 		
-	 		if (!$in_brackets && $route['route'][$i] != ')') {
+			}
+
+			// on détecte un backslash, on n'en veut pas
+			// sauf si on en avait déjà un juste avant
+			if ($route['route'][$i] == '\\' && !$backslash) {
+				$backslash = true;
+			} else {
+				$backslash = false;
+			}
+
+			if (!$in_brackets && !$backslash && $route['route'][$i] != ')') {
 				// on est pas dans les parenthèses
 				// on recopie simplement le caractère
  				$uri .= $route['route'][$i];
