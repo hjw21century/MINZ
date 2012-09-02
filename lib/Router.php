@@ -206,30 +206,34 @@ class Router {
 	 	for ($i = 0; $i < strlen ($route['route']); $i++) {
 			// on détecte qu'on rentre dans des parenthèses
 			// on va devoir changer par la valeur d'un paramètre
-	 		if ($route['route'][$i] == '(') {
+	 		if ($route['route'][$i] == '(' && !$backslash) {
 	 			$in_brackets = true;
 	 		}
 			// on sort des parenthèses
 			// ok, on change le paramètre maintenant
-			if ($route['route'][$i] == ')') {
-				$in_brackets = false;
-				$param = $route['params'][$num_param];
+	 		if ($route['route'][$i] == ')' && !$backslash) {
+	 			$in_brackets = false;
+	 			$param = $route['params'][$num_param];
  				$uri .= $url['params'][$param];
  				$num_param++;
-			}
-
-			// on détecte un backslash, on n'en veut pas
-			// sauf si on en avait déjà un juste avant
-			if ($route['route'][$i] == '\\' && !$backslash) {
-				$backslash = true;
-			} else {
-				$backslash = false;
-			}
-
-			if (!$in_brackets && !$backslash && $route['route'][$i] != ')') {
+	 		}
+	 		
+	 		if (!$in_brackets
+	 		 && ($route['route'][$i] != '\\' || $backslash)
+	 		 && ($route['route'][$i] != '(' || $backslash)
+	 		 && ($route['route'][$i] != ')' || $backslash)
+	 		 && ($route['route'][$i] != '?' || $backslash)) {
 				// on est pas dans les parenthèses
 				// on recopie simplement le caractère
  				$uri .= $route['route'][$i];
+	 		}
+	 		
+	 		// on détecte un backslash, on n'en veut pas
+	 		// sauf si on en avait déjà un juste avant
+	 		if ($route['route'][$i] == '\\' && !$backslash) {
+	 			$backslash = true;
+	 		} else {
+	 			$backslash = false;
 	 		}
 	 	}
 	 	
