@@ -170,7 +170,7 @@ class Paginator {
 		$this->_nbPage ();
 	}
 	public function _currentPage ($page) {
-		if($page < 1 || $page > $this->nbPage) {
+		if($page < 1 || ($page > $this->nbPage && $this->nbPage > 0)) {
 			throw new CurrentPagePaginationException ($page);
 		}
 
