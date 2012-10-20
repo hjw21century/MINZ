@@ -53,7 +53,7 @@ class Url {
 	 */
 	private static function printUri ($url) {
 		$uri = '';
-		$separator = '?';
+		$separator = '/?';
 		
 		if (isset ($url['c'])
 		 && $url['c'] != Request::defaultControllerName ()) {
