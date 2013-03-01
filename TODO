@@ -1,13 +1,3 @@
-version 1.1
- x coding style
- x supprimer libs openid et xmpp
- x supprimer models User_openid et User_xmpp
- x revoir l'url rewriting pour le rendre plus flexible
- x revoir en profondeur (ou supprimer ?) Model_array --> supprimé
- x faire une analyse complète sur le fonctionnement général du framework
- x revoir les méthodes/classes *trop* compliquées
- x revoir noms méthodes (View par exemple -> has_layout) --> il en reste peut-être
- - étoffer la View
- x suppression classe History (ingérable techniquement)
- - remettre en place le Cache, Error, Helper et Model_sql
- - rendre l'AppBootstrap plus souple
+version 1.2
+ - Documentation
+ - Des tests, des tests et des tests !
