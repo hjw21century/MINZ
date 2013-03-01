@@ -29,11 +29,17 @@ class Paginator {
 	private $nbPage = 1;
 
 	/**
+	 * $nbItems le nombre d'éléments
+	 */
+	private $nbItems = 0;
+
+	/**
 	 * Constructeur
 	 * @param $items les éléments à gérer
 	 */
 	public function __construct ($items) {
 		$this->_items ($items);
+		$this->_nbItems (count ($this->items (true)));
 		$this->_nbItemsPerPage ($this->nbItemsPerPage);
 		$this->_currentPage ($this->currentPage);
 	}
@@ -66,7 +72,7 @@ class Paginator {
 			}
 
 			$i++;
-		} while (!$page && $i < count ($this->items));
+		} while (!$page && $i < $this->nbItems ());
 
 		return $page;
 	}
@@ -86,7 +92,7 @@ class Paginator {
 			} else {
 				$i++;
 			}
-		} while (!$find && $i < count ($this->items));
+		} while (!$find && $i < $this->nbItems ());
 
 		return $i;
 	}
@@ -98,7 +104,7 @@ class Paginator {
 	 */
 	public function itemByPosition ($pos) {
 		if ($pos < 0) {
-			$pos = count ($this->items) - 1;
+			$pos = $this->nbItems () - 1;
 		}
 		if ($pos >= count($this->items)) {
 			$pos = 0;
@@ -115,17 +121,23 @@ class Paginator {
 	 */
 	public function items ($all = false) {
 		$array = array ();
-		$nbItems = count ($this->items);
+		$nbItems = $this->nbItems ();
 
 		if ($nbItems <= $this->nbItemsPerPage || $all) {
 			$array = $this->items;
 		} else {
-			$i = ($this->currentPage - 1) * $this->nbItemsPerPage;
+			$begin = ($this->currentPage - 1) * $this->nbItemsPerPage;
 			$counter = 0;
-
-			while ($counter < $this->nbItemsPerPage && $i < $nbItems) {
-				$array[] = $this->items[$i];
-				$counter++;
+			$i = 0;
+			
+			foreach ($this->items as $key => $item) {
+				if ($i >= $begin) {
+					$array[$key] = $item;
+					$counter++;
+				}
+				if ($counter >= $this->nbItemsPerPage) {
+					break;
+				}
 				$i++;
 			}
 		}
@@ -141,6 +153,9 @@ class Paginator {
 	public function nbPage () {
 		return $this->nbPage;
 	}
+	public function nbItems () {
+		return $this->nbItems;
+	}
 
 	/**
 	 * SETTEURS
@@ -153,8 +168,8 @@ class Paginator {
 		$this->_nbPage ();
 	}
 	public function _nbItemsPerPage ($nbItemsPerPage) {
-		if ($nbItemsPerPage > count ($this->items)) {
-			$nbItemsPerPage = count ($this->items);
+		if ($nbItemsPerPage > $this->nbItems ()) {
+			$nbItemsPerPage = $this->nbItems ();
 		}
 		if ($nbItemsPerPage < 0) {
 			$nbItemsPerPage = 0;
@@ -163,19 +178,19 @@ class Paginator {
 		$this->nbItemsPerPage = $nbItemsPerPage;
 		$this->_nbPage ();
 	}
-	public function _currentPage ($currentPage) {
-		if($currentPage < 1) {
-			$currentPage = 1;
+	public function _currentPage ($page) {
+		if($page < 1 || ($page > $this->nbPage && $this->nbPage > 0)) {
+			throw new CurrentPagePaginationException ($page);
 		}
-		if ($currentPage > $this->nbPage) {
-			$currentPage = $this->nbPage;
-		} 
 
-		$this->currentPage = $currentPage;
+		$this->currentPage = $page;
 	}
 	private function _nbPage () {
 		if ($this->nbItemsPerPage > 0) {
-			$this->nbPage = ceil (count ($this->items) / $this->nbItemsPerPage);
+			$this->nbPage = ceil ($this->nbItems () / $this->nbItemsPerPage);
 		}
+	}
+	public function _nbItems ($value) {
+		$this->nbItems = $value;
 	}
 }

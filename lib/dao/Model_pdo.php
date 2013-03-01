@@ -18,12 +18,12 @@ class Model_pdo {
 	 * Créé la connexion à la base de données à l'aide des variables
 	 * HOST, BASE, USER et PASS définies dans le fichier de configuration
 	 */
-	public function __construct ($type) {
+	public function __construct ($type = 'mysql') {
 		$db = Configuration::dataBase ();
 		try {
 			$string = $type
 			        . ':host=' . $db['host']
-				. ';dbname=' . $db['base'];
+			        . ';dbname=' . $db['base'];
 			$this->bd = new PDO (
 				$string,
 				$db['user'],

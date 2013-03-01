@@ -26,16 +26,16 @@ class Log {
 	 * 	- level = NOTICE et environment = PRODUCTION
 	 * @param $information message d'erreur / information à enregistrer
 	 * @param $level niveau d'erreur
-	 * @param $file fichier de log, par défaut LOG_PATH/application.log
+	 * @param $file_name fichier de log, par défaut LOG_PATH/application.log
 	 */
-	public static function record ($information, $level, $file = null) {
+	public static function record ($information, $level, $file_name = null) {
 		$env = Configuration::environment ();
 		
 		if (! ($env == Configuration::SILENT
 		       || ($env == Configuration::PRODUCTION
 		       && ($level == Log::WARNING || $level == Log::NOTICE)))) {
-			if (is_null ($file)) {
-				$file = LOG_PATH . '/application.log';
+			if (is_null ($file_name)) {
+				$file_name = LOG_PATH . '/application.log';
 			}
 			
 			switch ($level) {
@@ -53,9 +53,9 @@ class Log {
 			}
 			
 			if ($env == Configuration::PRODUCTION) {
-				$file = fopen ($file, 'a');
+				$file = fopen ($file_name, 'a');
 			} else {
-				$file = @fopen ($file, 'a');
+				$file = @fopen ($file_name, 'a');
 			}
 			
 			if ($file !== false) {
@@ -64,6 +64,14 @@ class Log {
 				$log .= ' ' . $information . "\n";
 				fwrite ($file, $log); 
 				fclose ($file);
+			} else {
+				Error::error (
+					500,
+					array ('error' => array (
+						'Permission is denied for `'
+						. $file_name . '`')
+					)
+				);
 			}
 		}
 	}

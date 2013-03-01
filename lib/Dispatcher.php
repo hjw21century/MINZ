@@ -41,32 +41,44 @@ class Dispatcher {
 	 * @exception MinzException
 	 */
 	public function run () {
-		while (Request::$reseted) {
-			Request::$reseted = false;
-			
-			// TODO Gérer le système de Cache
-			try {
-				$this->createController (
-					Request::controllerName ()
-					. 'Controller'
-				);
+		$cache = new Cache();
+		
+		if (Cache::isEnabled () && !$cache->expired ()) {
+			ob_start ();
+			$cache->render ();
+			$text = ob_get_clean();
+		} else {
+			while (Request::$reseted) {
+				Request::$reseted = false;
 				
-				ob_start ();
-				$this->controller->init ();
-				$this->controller->firstAction ();
-				$this->launchAction (
-					Request::actionName () . 'Action'
-				);
-				$this->controller->lastAction ();
-				$this->controller->view ()->build ();
-				$text = ob_get_clean();
-			} catch (MinzException $e) {
-				throw $e;
+				try {
+					$this->createController (
+						Request::controllerName ()
+						. 'Controller'
+					);
+				
+					$this->controller->init ();
+					$this->controller->firstAction ();
+					$this->launchAction (
+						Request::actionName ()
+						. 'Action'
+					);
+					$this->controller->lastAction ();
+					
+					if (!Request::$reseted) {
+						ob_start ();
+						$this->controller->view ()->build ();
+						$text = ob_get_clean();
+					}
+				} catch (MinzException $e) {
+					throw $e;
+				}
 			}
 		}
 		
 		Response::setBody ($text);
 	}
+	
 	
 	/**
 	 * Instancie le Controller
@@ -112,16 +124,21 @@ class Dispatcher {
 	 *          > le controller
 	 */
 	private function launchAction ($action_name) {
-		if (!is_callable (array ($this->controller, $action_name))) {
-			throw new ActionException (
-				get_class ($this->controller),
-				$action_name,
-				MinzException::ERROR
-			);
+		if (!Request::$reseted) {
+			if (!is_callable (array (
+				$this->controller,
+				$action_name
+			))) {
+				throw new ActionException (
+					get_class ($this->controller),
+					$action_name,
+					MinzException::ERROR
+				);
+			}
+			call_user_func (array (
+				$this->controller,
+				$action_name
+			));
 		}
-		call_user_func (array (
-			$this->controller,
-			$action_name
-		));
 	}
 }

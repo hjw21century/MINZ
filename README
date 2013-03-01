@@ -22,20 +22,25 @@ INSTALLATION
 
 ========
 CHANGELOG
+2013-03-01 Changes with MINZ 1.2.0 :
+ *) Réintroduction des fonctionnalités perdues au passage de la 1.1.0 (Error, Cache, PDO, JS dans la vue)
+ *) Request::forward() permet de faire une redirection dans le routage
+ *) Model_array() pour stocker dans des tableaux
+ *) Correction de beaucoup de bugs
+
 2012-06-24 Changes with MINZ 1.1.0 :
  *) Reprise de toute l'architecture / classes (direction version 2.0)
  *) Amélioration de l'url rewriting basé maintenant sur des regex
  *) Regressions par rapport aux versions précédentes (plus compatibles)
  *) Version pas encore tout à fait fonctionnelle
- 
-CHANGELOG
+
 2012-02-18 Changes with MINZ 1.0.0 :
  *) Ajout de la classe Cache
  *) Meilleure utilisation des Exception à travers la librairie
  *) Mise à jour des Model_{array|sql|txt}
  *) Code reformaté
  *) De la documentation !
- 
+
 2012-02-12 Changes with MINZ 0.5.0 :
  *) Ajout d'un paramètre de configuration indiquant la langue affichée actuellement par le site
  *) Ajout d'une classe Translate permettant de faciliter l'internationalisation du site
@@ -46,7 +51,7 @@ CHANGELOG
  *) Ajout de DAO Model_array et Model_txt
  *) Retouche design + application complète
  *) Correction divers bugs
- 
+
 2011-10-30 Changes with MINZ 0.4.0 :
  *) Suppression de constantes inutiles dans le index.php
  *) Renommage du fichier /app/Bootstrap.php en /app/AppBootstrap.php
@@ -58,18 +63,18 @@ CHANGELOG
  *) Les contrôleurs devront désormais se finir par le mot "Controller" (ex. "indexController")
  *) Amélioration de la classe Error - gestion plus fine
  *) Les classes Bootstrap, Controller et Route sont désormais des singletons
- 
+
 2011-09-11 Changes with MINZ 0.3.0 :
  *) Ajout d'une première version de classe Route pour gérer des urls spécifiques
  *) Ajout d'un AppBootstrap pour automatiser les actions redondantes dans chaque controller
- 
+
 2011-08-26 Changes with MINZ 0.2.0 :
  *) Correction nom application dans les commentaires
  *) Ajout de commentaires dans la librairie
  *) Ajout de la classe Paginator pour faciliter la pagination
  *) Gestion des magic_quotes : si activé sur serveur, on les "désactive"
  *) Création d'une liste de "features"
- 
+
 2011-08-12 Changes with MINZ 0.1.0 :
  *) Première version de MINZ
 
@@ -79,11 +84,3 @@ AUTHORS
 Main Developer - Marien Fressinaud <contact [AT] marienfressinaud.fr><marienfressinaud [AT] gmail.com> <JID: marienfressinaud [AT] jappix.com>
 http://marienfressinaud.fr
 License https://www.gnu.org/licenses/ AGPL 3
-
-XMPPHP library - Nathanael C. Fritz <JID: fritzy [AT] netflint.net> - Stephan Wentz <JID: stephan [AT] jabber.wentz.it> - Michael Garvin <JID: gar [AT] netflint.net>
-https://code.google.com/p/xmpphp/
-License https://www.gnu.org/licenses/old-licenses/gpl-2.0.html GPL 2
-
-OpenID library - JanRain, Inc. <openid [AT] janrain.com>
-janrain.com
-License http://www.apache.org/licenses/LICENSE-2.0 Apache

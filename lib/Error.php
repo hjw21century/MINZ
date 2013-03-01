@@ -27,6 +27,8 @@ class Error {
 				'code' => $code,
 				'logs' => $logs
 			);
+			
+			Response::setHeader ($code);
 			Request::forward (array (
 				'c' => 'error',
 				'params' => $params

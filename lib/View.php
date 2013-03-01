@@ -17,6 +17,9 @@ class View {
 	
 	private static $title = '';
 	private static $styles = array ();
+	private static $scripts = array ();
+	
+	private static $params = array ();
 	
 	/**
 	 * Constructeur
@@ -125,8 +128,8 @@ class View {
 
 		foreach(self::$styles as $style) {
 			$styles .= '<link rel="stylesheet" type="text/css"';
-			$styles .= ' media="'.$style['media'].'"';
-			$styles .= ' href="'.$style['url'].'" />'."\n";
+			$styles .= ' media="' . $style['media'] . '"';
+			$styles .= ' href="' . $style['url'] . '" />' . "\n";
 		}
 
 		return $styles;
@@ -142,6 +145,43 @@ class View {
 			'url' => $url,
 			'media' => $media
 		);
+	}
+	
+	/**
+	 * Gestion des scripts JS
+	 */
+	public static function headScript () {
+		$scripts = '';
+
+		foreach (self::$scripts as $script) {
+			$scripts .= '<script type="text/javascript"';
+			$scripts .= ' src="' . $script['url'] . '">';
+			$scripts .= '</script>' . "\n";
+		}
+
+		return $scripts;
+	}
+	public static function prependScript ($url) {
+		array_unshift(self::$scripts, array (
+			'url' => $url
+		));
+	}
+	public static function appendScript ($url) {
+		self::$scripts[] = array (
+			'url' => $url
+		);
+	}
+	
+	/**
+	 * Gestion des paramètres ajoutés à la vue
+	 */
+	public static function _param ($key, $value) {
+		self::$params[$key] = $value;
+	}
+	public function attributeParams () {
+		foreach (View::$params as $key => $value) {
+			$this->$key = $value;
+		}
 	}
 }
 

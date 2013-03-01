@@ -111,7 +111,7 @@ class Router {
 			if (preg_match ($regex, $uri, $matches)) {
 				$url['c'] = $route['controller'];
 				$url['a'] = $route['action'];
-				$url['params'] = $this->getParams(
+				$url['params'] = $this->getParams (
 					$route['params'],
 					$matches
 				);
@@ -142,7 +142,7 @@ class Router {
 		$route = $this->searchRoute ($url);
 		
 		if ($route !== false) {
-			return $this->replaceParams ($route, $url);
+			return $this->replaceParams ($route, $url['params']);
 		}
 		
 		return '';
@@ -165,8 +165,10 @@ class Router {
 					$url['params']
 				);
 				
-				// TODO vérifier cas où $params est vide et pas $url['params']
-				if (empty ($difference_params)) {
+				// vérifie que pas de différence
+				// et le cas où $params est vide et pas $url['params']
+				if (empty ($difference_params)
+				&& (!empty ($params) || empty ($url['params']))) {
 					return $route;
 				}
 			}
@@ -193,37 +195,15 @@ class Router {
 	}
 	
 	/**
-	 * Remplace les éléments de la route par les valeurs contenues dans $url
-	 * TODO Fonction très sale ! À revoir (preg_replace ?)
+	 * Remplace les éléments de la route par les valeurs contenues dans $params
 	 */
-	private function replaceParams ($route, $url) {
-		$uri = '';
-		$in_brackets = false;
-		$num_param = 0;
-		
-		// parcourt caractère par caractère
-	 	for ($i = 0; $i < strlen ($route['route']); $i++) {
-			// on détecte qu'on rentre dans des parenthèses
-			// on va devoir changer par la valeur d'un paramètre
-	 		if ($route['route'][$i] == '(') {
-	 			$in_brackets = true;
-	 		}
-			// on sort des parenthèses
-			// ok, on change le paramètre maintenant
-	 		if ($route['route'][$i] == ')') {
-	 			$in_brackets = false;
-	 			$param = $route['params'][$num_param];
- 				$uri .= $url['params'][$param];
- 				$num_param++;
-	 		}
-	 		
-	 		if (!$in_brackets && $route['route'][$i] != ')') {
-				// on est pas dans les parenthèses
-				// on recopie simplement le caractère
- 				$uri .= $route['route'][$i];
-	 		}
-	 	}
-	 	
-	 	return $uri;
+	private function replaceParams ($route, $params_replace) {
+		$uri = $route['route'];
+		$params = array();
+		foreach($route['params'] as $param) {
+			$uri = preg_replace('#\((.+)\)#U', $params_replace[$param], $uri, 1);
+		}
+
+		return stripslashes($uri);
 	 }
 }
