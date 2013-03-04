@@ -32,6 +32,10 @@ class FrontController {
 	 */
 	public function __construct () {
 		$this->loadLib ();
+
+		if (LOG_PATH === false) {
+			$this->killApp ('Path doesn\'t exist : LOG_PATH');
+		}
 		
 		try {
 			Configuration::init ();
@@ -97,8 +101,10 @@ class FrontController {
 	/**
 	* Permet d'arrêter le programme en urgence
 	*/
-	private function killApp () {
-		exit ('### Application problem ###'."\n".
-		      'See logs files');
+	private function killApp ($txt = '') {
+		if ($txt == '') {
+			$txt = 'See logs files';
+		}
+		exit ('### Application problem ###'."\n".$txt);
 	}
 }

@@ -1,5 +1,5 @@
 <?php
-
+// mettre le paramètre use_url_rewriting à true pour profiter de l'url rewriting
 return array (
 	array (
 		'route'         => '/login',

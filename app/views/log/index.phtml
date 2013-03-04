@@ -1,12 +1,12 @@
 <ul class="pagination">
-	<li class="pager-item"><a href="<?php echo Url::display (); ?>"><?php echo Translate::t ('go back'); ?></a></li>
+	<li class="pager-item"><a href="<?php echo _url ('index', 'index'); ?>"><?php echo Translate::t ('go back'); ?></a></li>
 </ul>
 
 <h1><?php echo Translate::t ('read logs'); ?></h1>
 
 <?php $items = $this->logsPaginator->items (); ?>
 <?php if (!empty ($items)) { ?>
-<a class="delete" href="<?php echo Url::display (array ('c' => 'log', 'a' => 'vider')); ?>"><?php echo Translate::t ('empty logs'); ?></a>
+<a class="delete" href="<?php echo _url ('log', 'vider'); ?>"><?php echo Translate::t ('empty logs'); ?></a>
 
 <div class="logs">
 	<?php $this->logsPaginator->render ('pagination.phtml', 'page'); ?>

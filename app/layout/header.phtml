@@ -2,16 +2,16 @@
 	<p class="switchLangue">
 		<?php if (Translate::language () == 'fr') { ?>
 			<?php echo Translate::t ('En Français'); ?> - 
-			<a href="<?php echo Url::display (array ('a' => 'changeLanguage', 'params' => array ('l' => 'en'))); ?>">
+			<a href="<?php echo _url ('index', 'changeLanguage', 'l', 'en'); ?>">
 			<?php echo Translate::t ('English'); ?>
 			</a>
 		<?php } else { ?>
 			<?php echo Translate::t ('In English'); ?> - 
-			<a href="<?php echo Url::display (array ('a' => 'changeLanguage', 'params' => array ('l' => 'fr'))); ?>">
+			<a href="<?php echo _url ('index', 'changeLanguage', 'l', 'fr'); ?>">
 			<?php echo Translate::t ('Français'); ?>
 			</a>
 		<?php } ?>
-		- <a href="<?php echo Url::display (array ('c' => 'log', 'params' => array ('page' => 1))); ?>">Logs</a>
+		- <a href="<?php echo _url ('log', 'index', 'page', 1); ?>">Logs</a>
 	</p>
 	<h1><a href="<?php echo Url::display (); ?>"><?php echo View::title (); ?></a></h1>
 </div>

@@ -12,10 +12,10 @@
 <?php } ?>
 
 <?php if ($this->user->isLogged ()) { ?>
-	<p><?php echo Translate::t ('welcome'); ?> <strong><?php echo $this->user->id (); ?></strong> (<a href="<?php echo Url::display (array ('a' => 'logout')); ?>"><?php echo Translate::t ('logout'); ?></a>)</p>
+	<p><?php echo Translate::t ('welcome'); ?> <strong><?php echo $this->user->id (); ?></strong> (<a href="<?php echo _url ('index', 'logout'); ?>"><?php echo Translate::t ('logout'); ?></a>)</p>
 <?php } else { ?>
 <!-- affichage formulaire -->
-<form method="post" action="<?php echo Url::display (array ('a' => 'login')); ?>">
+<form method="post" action="<?php echo _url ('index', 'login'); ?>">
 	<fieldset>
 		<legend><?php echo Translate::t ('connection'); ?></legend>
 		<p>
