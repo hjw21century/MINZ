@@ -145,23 +145,36 @@ class View {
 		$styles = '';
 
 		foreach(self::$styles as $style) {
+			$cond = $style['cond'];
+			if ($cond) {
+				$styles .= '<!--[if ' . $cond . ']>';
+			}
+
 			$styles .= '<link rel="stylesheet" type="text/css"';
 			$styles .= ' media="' . $style['media'] . '"';
-			$styles .= ' href="' . $style['url'] . '" />' . "\n";
+			$styles .= ' href="' . $style['url'] . '" />';
+
+			if ($cond) {
+				$styles .= '<![endif]-->';
+			}
+
+			$styles .= "\n";
 		}
 
 		return $styles;
 	}
-	public static function prependStyle ($url, $media = 'all') {
+	public static function prependStyle ($url, $media = 'all', $cond = false) {
 		array_unshift (self::$styles, array (
 			'url' => $url,
-			'media' => $media
+			'media' => $media,
+			'cond' => $cond
 		));
 	}
-	public static function appendStyle ($url, $media = 'all') {
+	public static function appendStyle ($url, $media = 'all', $cond = false) {
 		self::$styles[] = array (
 			'url' => $url,
-			'media' => $media
+			'media' => $media,
+			'cond' => $cond
 		);
 	}
 
@@ -172,21 +185,34 @@ class View {
 		$scripts = '';
 
 		foreach (self::$scripts as $script) {
+			$cond = $script['cond'];
+			if ($cond) {
+				$scripts .= '<!--[if ' . $cond . ']>';
+			}
+
 			$scripts .= '<script type="text/javascript"';
 			$scripts .= ' src="' . $script['url'] . '">';
-			$scripts .= '</script>' . "\n";
+			$scripts .= '</script>';
+
+			if ($cond) {
+				$scripts .= '<![endif]-->';
+			}
+
+			$scripts .= "\n";
 		}
 
 		return $scripts;
 	}
-	public static function prependScript ($url) {
+	public static function prependScript ($url, $cond = false) {
 		array_unshift(self::$scripts, array (
-			'url' => $url
+			'url' => $url,
+			'cond' => $cond
 		));
 	}
-	public static function appendScript ($url) {
+	public static function appendScript ($url, $cond = false) {
 		self::$scripts[] = array (
-			'url' => $url
+			'url' => $url,
+			'cond' => $cond
 		);
 	}
 
