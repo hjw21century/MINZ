@@ -54,8 +54,11 @@ class Translate {
 		if (isset (self::$translates[$key])) {
 			$translate = self::$translates[$key];
 		}
+
+		$args = func_get_args ();
+		unset($args[0]);
 		
-		return $translate;
+		return vsprintf ($translate, $args);
 	}
 	
 	/**

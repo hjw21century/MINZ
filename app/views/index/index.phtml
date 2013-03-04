@@ -1,5 +1,5 @@
 <!-- message d'accueil -->
-<?php echo Translate::t ('page home'); ?>
+<?php echo Translate::t ('page home', Configuration::VERSION); ?>
 
 <?php if (isset ($this->error)) { ?>
 <!-- affichage erreurs -->
@@ -12,7 +12,7 @@
 <?php } ?>
 
 <?php if ($this->user->isLogged ()) { ?>
-	<p><?php echo Translate::t ('welcome'); ?> <strong><?php echo $this->user->id (); ?></strong> (<a href="<?php echo _url ('index', 'logout'); ?>"><?php echo Translate::t ('logout'); ?></a>)</p>
+	<p><?php echo Translate::t ('welcome', $this->user->id ()); ?> (<a href="<?php echo _url ('index', 'logout'); ?>"><?php echo Translate::t ('logout'); ?></a>)</p>
 <?php } else { ?>
 <!-- affichage formulaire -->
 <form method="post" action="<?php echo _url ('index', 'login'); ?>">
