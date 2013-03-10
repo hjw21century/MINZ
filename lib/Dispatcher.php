@@ -42,10 +42,14 @@ class Dispatcher {
 	 */
 	public function run () {
 		$cache = new Cache();
-		$gzip = 'ob_gzhandler';
+		// Le ob_start est dupliqué : sans ça il y a un bug sous Firefox
+		// ici on l'appelle avec 'ob_gzhandler', après sans.
+		// Vraisemblablement la compression fonctionne mais c'est sale
+		// J'ignore les effets de bord :(
+		ob_start ('ob_gzhandler');
 
 		if (Cache::isEnabled () && !$cache->expired ()) {
-			ob_start ($gzip);
+			ob_start ();
 			$cache->render ();
 			$text = ob_get_clean();
 		} else {
@@ -67,7 +71,7 @@ class Dispatcher {
 					$this->controller->lastAction ();
 
 					if (!Request::$reseted) {
-						ob_start ($gzip);
+						ob_start ();
 						$this->controller->view ()->build ();
 						$text = ob_get_clean();
 					}

@@ -48,7 +48,7 @@ class Configuration {
 	private static $use_url_rewriting = false;
 	private static $title = '';
 	private static $language = 'en';
-	private static $cache_enabled = true;
+	private static $cache_enabled = false;
 	private static $delay_cache = 3600;
 
 	private static $db = array (
