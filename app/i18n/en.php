@@ -18,8 +18,8 @@ return array(
 	'go back home'          => 'Go back to Home',
 	'go back'               => 'Go back to previous page',
 	'an error occured'      => 'An error occured',
-	'welcome'               => 'Welcome',
+	'welcome'               => 'Welcome <strong>%s</strong>',
 	'error'                 => 'Error',
 	
-	'page home'             => '<p>Welcome on your first MINZ application !</p> <p>MINZ is an unpretentious PHP framework, which has many similarities with <a href="http://framework.zend.com/">Zend Framework</a>. You run the <strong>'.Configuration::VERSION.'</strong> version of MINZ. Framework licence is <a href="https://www.gnu.org/licenses/agpl.html">AGPL 3</a>. <a href="http://marienfressinaud.fr/projets/6/MINZ">More information here (in french)</a>.</p> <p>Below, a little application enables you to (dis)connect with an ID. Don\'t get me wrong, it is of little interest... but it shows how MINZ works ;-)<br /> Ready, steady, Doe !</p>'
+	'page home'             => '<p>Welcome on your first MINZ application !</p> <p>MINZ is an unpretentious PHP framework, which has many similarities with <a href="http://framework.zend.com/">Zend Framework</a>. You run the <strong>%s</strong> version of MINZ. Framework licence is <a href="https://www.gnu.org/licenses/agpl.html">AGPL 3</a>. <a href="https://github.com/marienfressinaud/MINZ">More information here (in french)</a>.</p> <p>Below, a little application enables you to (dis)connect with an ID. Don\'t get me wrong, it is of little interest... but it shows how MINZ works ;-)<br /> Ready, steady, Doe !</p>'
 );

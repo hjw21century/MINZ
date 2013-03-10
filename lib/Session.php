@@ -52,6 +52,11 @@ class Session {
 		} else {
 			$_SESSION[$p] = $v;
 			self::$session[$p] = $v;
+
+			if($p == 'language') {
+				// reset pour remettre à jour le fichier de langue à utiliser
+				Translate::reset ();
+			}
 		}
 	}
 	

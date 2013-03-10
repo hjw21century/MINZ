@@ -2,8 +2,7 @@
 REQUIS
  *) Un serveur Apache
  *) PHP Version 5 ou plus
- *) Avec l'url rewriting activé, c'est mieux, mais ça fonctionne très bien sans ;)
-
+ *) Avec l'url rewriting activé, c'est mieux, mais ça fonctionne très bien sans
 
 ========
 INSTALLATION
@@ -12,16 +11,26 @@ INSTALLATION
  3) Faire les modifications nécessaires dans app/configuration/application.ini
 
 [Dans /app/configuration/application.ini]
- 2) En fonction de si l'url_rewriting est activé sur votre serveur, modifiez (ou non) le paramètre use_url_rewriting.
- 3) Modifier le nom de domaine. Si le chemin pour y accéder est quelque chose du genre : http://votre-domaine.fr/public, alors pensez à ajouter le /public
+ 4) En fonction de si l'url_rewriting est activé sur votre serveur, modifiez (ou non) le paramètre use_url_rewriting.
+ 5) Modifier le nom de domaine. Si le chemin pour y accéder est quelque chose du genre : http://votre-domaine.fr/public, alors pensez à ajouter le /public
 
 [si ça ne fonctionne pas]
- 4) Pensez à regarder les logs PHP et les logs de l'application (encore que les logs PHP seront beaucoup plus complets)
- 5) Si vraiment ça ne marche pas, contactez-moi (dev@marienfressinaud.fr) et je pourrai peut-être vous aider :)
+ 6) Pensez à regarder les logs PHP et les logs de l'application
+ 7) Si vraiment ça ne marche pas, contactez-moi (dev@marienfressinaud.fr) et je pourrai peut-être vous aider :)
+ 8) Pensez à rapporter les bugs rencontrés sur GitHub : https://github.com/marienfressinaud/MINZ/issues
 
 
 ========
 CHANGELOG
+2013-03-10 Changes with MINZ 1.3.0 :
+ *) Alias de simplification de l'écriture des Url : _url(controller, actions, param, value, ...)
+ *) Traductions avec variables possibles
+ *) Scripts et styles conditionnels (IE) possibles
+ *) Meilleure gestion de l'environnement (production, development ou silent)
+ *) Gestion de la compression gzip
+ *) Mise à jour du Cache qui ne marchait pas tout à fait
+ *) Affichage Helpers grâce à la Vue
+
 2013-03-01 Changes with MINZ 1.2.0 :
  *) Réintroduction des fonctionnalités perdues au passage de la 1.1.0 (Error, Cache, PDO, JS dans la vue)
  *) Request::forward() permet de faire une redirection dans le routage
@@ -79,8 +88,8 @@ CHANGELOG
  *) Première version de MINZ
 
 
-========
-AUTHORS
-Main Developer - Marien Fressinaud <contact [AT] marienfressinaud.fr><marienfressinaud [AT] gmail.com> <JID: marienfressinaud [AT] jappix.com>
+======
+AUTHOR
+Main Developer - Marien Fressinaud <dev [AT] marienfressinaud.fr> <contact [AT] marienfressinaud.fr> <JID: marienfressinaud [AT] jappix.com>
 http://marienfressinaud.fr
 License https://www.gnu.org/licenses/ AGPL 3

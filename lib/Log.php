@@ -53,15 +53,15 @@ class Log {
 			}
 			
 			if ($env == Configuration::PRODUCTION) {
-				$file = fopen ($file_name, 'a');
-			} else {
 				$file = @fopen ($file_name, 'a');
+			} else {
+				$file = fopen ($file_name, 'a');
 			}
 			
 			if ($file !== false) {
 				$log = '[' . date('r') . ']';
 				$log .= ' [' . $level_label . ']';
-				$log .= ' ' . $information . "\n";
+				$log .= ' --- ' . $information . "\n";
 				fwrite ($file, $log); 
 				fclose ($file);
 			} else {
@@ -74,5 +74,19 @@ class Log {
 				);
 			}
 		}
+	}
+
+	/**
+	 * Automatise le log des variables globales $_GET et $_POST
+	 * Fait appel à la fonction record(...)
+	 * Ne fonctionne qu'en environnement "development"
+	 * @param $file_name fichier de log, par défaut LOG_PATH/application.log
+	 */
+	public static function recordRequest($file_name = null) {
+		$msg_get = str_replace("\n", '', '$_GET content : ' . print_r($_GET, true));
+		$msg_post = str_replace("\n", '', '$_POST content : ' . print_r($_POST, true));
+
+		self::record($msg_get, Log::NOTICE, $file_name);
+		self::record($msg_post, Log::NOTICE, $file_name);
 	}
 }

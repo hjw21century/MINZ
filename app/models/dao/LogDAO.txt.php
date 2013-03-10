@@ -11,9 +11,9 @@ class LogDAO extends Model_txt {
 		$i = 0;
 		while (($line = $this->readLine ()) !== false && $i < 3000) {
 			$logs[$i] = new Log_Model ();
-			$logs[$i]->_date (preg_replace ("'\[(.*?)\] \[(.*?)\] (.*?)'U", "\\1", $line));
-			$logs[$i]->_level (preg_replace ("'\[(.*?)\] \[(.*?)\] (.*?)'U", "\\2", $line));
-			$logs[$i]->_info (preg_replace ("'\[(.*?)\] \[(.*?)\] (.*?)'U", "\\3", $line));
+			$logs[$i]->_date (preg_replace ("'\[(.*?)\] \[(.*?)\] --- (.*?)'U", "\\1", $line));
+			$logs[$i]->_level (preg_replace ("'\[(.*?)\] \[(.*?)\] --- (.*?)'U", "\\2", $line));
+			$logs[$i]->_info (preg_replace ("'\[(.*?)\] \[(.*?)\] --- (.*?)'U", "\\3", $line));
 			$i++;
 		}
 

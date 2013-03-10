@@ -108,3 +108,19 @@ class Url {
 		return $url_checked;
 	}
 }
+
+function _url ($controller, $action) {
+	$nb_args = func_num_args ();
+
+	if($nb_args < 2 || $nb_args % 2 != 0) {
+		return false;
+	}
+
+	$args = func_get_args ();
+	$params = array ();
+	for($i = 2; $i < $nb_args; $i = $i + 2) {
+		$params[$args[$i]] = $args[$i + 1];
+	}
+
+	return Url::display (array ('c' => $controller, 'a' => $action, 'params' => $params));
+}
