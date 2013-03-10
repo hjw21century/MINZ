@@ -11,13 +11,13 @@
  */
 class Dispatcher {
 	const CONTROLLERS_PATH_NAME = '/controllers';
-	
+
 	/* singleton */
 	private static $instance = null;
-	
+
 	private $router;
 	private $controller;
-	
+
 	/**
 	 * Récupère l'instance du Dispatcher
 	 */
@@ -34,7 +34,7 @@ class Dispatcher {
 	private function __construct ($router) {
 		$this->router = $router;
 	}
-	
+
 	/**
 	 * Lance le controller indiqué dans Request
 	 * Remplit le body de Response à partir de la Vue
@@ -42,21 +42,22 @@ class Dispatcher {
 	 */
 	public function run () {
 		$cache = new Cache();
-		
+		$gzip = 'ob_gzhandler';
+
 		if (Cache::isEnabled () && !$cache->expired ()) {
-			ob_start ();
+			ob_start ($gzip);
 			$cache->render ();
 			$text = ob_get_clean();
 		} else {
 			while (Request::$reseted) {
 				Request::$reseted = false;
-				
+
 				try {
 					$this->createController (
 						Request::controllerName ()
 						. 'Controller'
 					);
-				
+
 					$this->controller->init ();
 					$this->controller->firstAction ();
 					$this->launchAction (
@@ -64,9 +65,9 @@ class Dispatcher {
 						. 'Action'
 					);
 					$this->controller->lastAction ();
-					
+
 					if (!Request::$reseted) {
-						ob_start ();
+						ob_start ($gzip);
 						$this->controller->view ()->build ();
 						$text = ob_get_clean();
 					}
@@ -75,11 +76,10 @@ class Dispatcher {
 				}
 			}
 		}
-		
+
 		Response::setBody ($text);
 	}
-	
-	
+
 	/**
 	 * Instancie le Controller
 	 * @param $controller_name le nom du controller à instancier
@@ -92,7 +92,7 @@ class Dispatcher {
 	private function createController ($controller_name) {
 		$filename = APP_PATH . self::CONTROLLERS_PATH_NAME . '/'
 		          . $controller_name . '.php';
-		
+
 		if (!file_exists ($filename)) {
 			throw new FileNotExistException (
 				$filename,
@@ -100,7 +100,7 @@ class Dispatcher {
 			);
 		}
 		require_once ($filename);
-		
+
 		if (!class_exists ($controller_name)) {
 			throw new ControllerNotExistException (
 				$controller_name,
@@ -108,7 +108,7 @@ class Dispatcher {
 			);
 		}
 		$this->controller = new $controller_name ($this->router);
-		
+
 		if (! ($this->controller instanceof ActionController)) {
 			throw new ControllerNotActionControllerException (
 				$controller_name,
@@ -116,7 +116,7 @@ class Dispatcher {
 			);
 		}
 	}
-	
+
 	/**
 	 * Lance l'action sur le controller du dispatcher
 	 * @param $action_name le nom de l'action
