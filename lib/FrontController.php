@@ -39,6 +39,7 @@ class FrontController {
 		
 		try {
 			Configuration::init ();
+
 			Request::init ();
 			
 			$this->router = new Router ();

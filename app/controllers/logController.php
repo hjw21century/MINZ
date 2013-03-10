@@ -1,6 +1,10 @@
 <?php
 
 class logController extends ActionController {
+	public function firstAction () {
+		Cache::switchOff ();
+	}
+
 	public function indexAction () {
 		$logDAO = new LogDAO ();
 		$logs = $logDAO->lister ();

@@ -175,6 +175,12 @@ class Configuration {
 		}
 		if (isset ($general['cache_enabled'])) {
 			self::$cache_enabled = $general['cache_enabled'];
+			if (CACHE_PATH === false && self::$cache_enabled) {
+				throw new FileNotExistException (
+					'CACHE_PATH',
+					MinzException::ERROR
+				);
+			}
 		}
 		if (isset ($general['delay_cache'])) {
 			self::$delay_cache = $general['delay_cache'];

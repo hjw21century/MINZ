@@ -1,1 +1,2 @@
-log/application.log
+log/*
+cache/*

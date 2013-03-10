@@ -2,6 +2,8 @@
 
 class ErrorController extends ActionController {
 	public function indexAction () {
+		Cache::switchOff ();
+
 		View::prependTitle (Translate::t ('error') . ' - ');
 		
 		switch (Request::param ('code')) {

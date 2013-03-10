@@ -75,6 +75,10 @@ class Dispatcher {
 					throw $e;
 				}
 			}
+
+			if (Cache::isEnabled ()) {
+				$cache->cache ($text);
+			}
 		}
 
 		Response::setBody ($text);
