@@ -1,15 +1,15 @@
 <?php
-/** 
+/**
  * MINZ - Copyright 2011 Marien Fressinaud
  * Sous licence AGPL3 <http://www.gnu.org/licenses/>
 */
 
 /**
- * La classe Configuration permet de gérer la configuration de l'application
+ * La classe Configuration permet de gÃ©rer la configuration de l'application
  */
 class Configuration {
 	const CONF_PATH_NAME = '/configuration/application.ini';
-	
+
 	/**
 	 * VERSION est la version actuelle de MINZ
 	 */
@@ -18,29 +18,29 @@ class Configuration {
 	/**
 	 * valeurs possibles pour l'"environment"
 	 * SILENT rend l'application muette (pas de log)
-	 * PRODUCTION est recommandée pour une appli en production
+	 * PRODUCTION est recommandÃ©e pour une appli en production
 	 *			(log les erreurs critiques)
 	 * DEVELOPMENT log toutes les erreurs
 	 */
 	const SILENT = 0;
 	const PRODUCTION = 1;
 	const DEVELOPMENT = 2;
-	
+
 	/**
-	 * définition des variables de configuration
-	 * $sel_application une chaîne de caractères aléatoires (obligatoire)
-	 * $environment gère le niveau d'affichage pour log et erreurs
+	 * dÃ©finition des variables de configuration
+	 * $sel_application une chaÃ®ne de caractÃ¨res alÃ©atoires (obligatoire)
+	 * $environment gÃ¨re le niveau d'affichage pour log et erreurs
 	 * $use_url_rewriting indique si on utilise l'url_rewriting
-	 * $base_url le chemin de base pour accéder à l'application
+	 * $base_url le chemin de base pour accÃ©der Ã  l'application
 	 * $title le nom de l'application
-	 * $language la langue par défaut de l'application
-	 * $cacheEnabled permet de savoir si le cache doit être activé
+	 * $language la langue par dÃ©faut de l'application
+	 * $cacheEnabled permet de savoir si le cache doit Ãªtre activÃ©
 	 * $delayCache la limite de cache
-	 * $db paramètres pour la base de données (tableau)
+	 * $db paramÃ¨tres pour la base de donnÃ©es (tableau)
 	 *     - host le serveur de la base
 	 *     - user nom d'utilisateur
 	 *     - password mot de passe de l'utilisateur
-	 *     - base le nom de la base de données
+	 *     - base le nom de la base de donnÃ©es
 	 */
 	private static $sel_application = '';
 	private static $environment = Configuration::PRODUCTION;
@@ -50,14 +50,14 @@ class Configuration {
 	private static $language = 'en';
 	private static $cache_enabled = true;
 	private static $delay_cache = 3600;
-	
+
 	private static $db = array (
 		'host' => false,
 		'user' => false,
 		'password' => false,
 		'base' => false
 	);
-	
+
 	/*
 	 * Getteurs
 	 */
@@ -88,26 +88,27 @@ class Configuration {
 	public static function dataBase () {
 		return self::$db;
 	}
-	
+
 	/**
 	 * Initialise les variables de configuration
 	 * @exception FileNotExistException si le CONF_PATH_NAME n'existe pas
-	 * @exception BadConfigurationException si CONF_PATH_NAME mal formaté
+	 * @exception BadConfigurationException si CONF_PATH_NAME mal formatÃ©
 	 */
 	public static function init () {
 		try {
 			self::parseFile ();
+			self::setReporting ();
 		} catch (BadConfigurationException $e) {
 			throw $e;
 		} catch (FileNotExistException $e) {
 			throw $e;
 		}
 	}
-	
+
 	/**
 	 * Parse un fichier de configuration de type ".ini"
 	 * @exception FileNotExistException si le CONF_PATH_NAME n'existe pas
-	 * @exception BadConfigurationException si CONF_PATH_NAME mal formaté
+	 * @exception BadConfigurationException si CONF_PATH_NAME mal formatÃ©
 	 */
 	private static function parseFile () {
 		if (!file_exists (APP_PATH . self::CONF_PATH_NAME)) {
@@ -120,7 +121,7 @@ class Configuration {
 			APP_PATH . self::CONF_PATH_NAME,
 			true
 		);
-		
+
 		// [general] est obligatoire
 		if (!isset ($ini_array['general'])) {
 			throw new BadConfigurationException (
@@ -129,8 +130,8 @@ class Configuration {
 			);
 		}
 		$general = $ini_array['general'];
-		
-		
+
+
 		// sel_application est obligatoire
 		if (!isset ($general['sel_application'])) {
 			throw new BadConfigurationException (
@@ -139,7 +140,7 @@ class Configuration {
 			);
 		}
 		self::$sel_application = $general['sel_application'];
-		
+
 		if (isset ($general['environment'])) {
 			switch ($general['environment']) {
 			case 'silent':
@@ -157,7 +158,7 @@ class Configuration {
 					MinzException::ERROR
 				);
 			}
-			
+
 		}
 		if (isset ($general['base_url'])) {
 			self::$base_url = $general['base_url'];
@@ -165,7 +166,7 @@ class Configuration {
 		if (isset ($general['use_url_rewriting'])) {
 			self::$use_url_rewriting = $general['use_url_rewriting'];
 		}
-		
+
 		if (isset ($general['title'])) {
 			self::$title = $general['title'];
 		}
@@ -178,8 +179,8 @@ class Configuration {
 		if (isset ($general['delay_cache'])) {
 			self::$delay_cache = $general['delay_cache'];
 		}
-		
-		// Base de données
+
+		// Base de donnÃ©es
 		$db = false;
 		if (isset ($ini_array['db'])) {
 			$db = $ini_array['db'];
@@ -209,11 +210,25 @@ class Configuration {
 					MinzException::ERROR
 				);
 			}
-			
+
 			self::$db['host'] = $db['host'];
 			self::$db['user'] = $db['user'];
 			self::$db['password'] = $db['password'];
 			self::$db['base'] = $db['base'];
+		}
+	}
+
+	private static function setReporting () {
+		if (self::environment () == self::DEVELOPMENT) {
+			error_reporting (E_ALL);
+			ini_set ('display_errors','On');
+			ini_set('log_errors', 'On');
+		} elseif (self::environment () == self::PRODUCTION) {
+			error_reporting(E_ALL);
+			ini_set('display_errors','Off');
+			ini_set('log_errors', 'On');
+		} else {
+			error_reporting(0);
 		}
 	}
 }
