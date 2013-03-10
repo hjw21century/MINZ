@@ -34,7 +34,10 @@ class indexController extends ActionController {
 	
 	public function loginAction () {
 		$url = array ();
-		
+
+		// permet de logguer les paramètres $_POST et $_GET pour s'assurer 
+		// Log::recordRequest();
+
 		if (Request::isPost ()) {
 			$id = Request::param ('id');
 			if (!empty ($id)) {
