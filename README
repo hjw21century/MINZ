@@ -22,6 +22,15 @@ INSTALLATION
 
 ========
 CHANGELOG
+2013-03-10 Changes with MINZ 1.3.0 :
+ *) Alias de simplification de l'écriture des Url : _url(controller, actions, param, value, ...)
+ *) Traductions avec variables possibles
+ *) Scripts et styles conditionnels (IE) possibles
+ *) Meilleure gestion de l'environnement (production, development ou silent)
+ *) Gestion de la compression gzip
+ *) Mise à jour du Cache qui ne marchait pas tout à fait
+ *) Affichage Helpers grâce à la Vue
+
 2013-03-01 Changes with MINZ 1.2.0 :
  *) Réintroduction des fonctionnalités perdues au passage de la 1.1.0 (Error, Cache, PDO, JS dans la vue)
  *) Request::forward() permet de faire une redirection dans le routage
