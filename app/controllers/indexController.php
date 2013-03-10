@@ -28,8 +28,6 @@ class indexController extends ActionController {
 			Session::_param ('language', $l);
 		}
 
-		Cache::clean ();
-
 		Request::forward ();
 	}
 	
@@ -48,13 +46,12 @@ class indexController extends ActionController {
 				$url['params'] = array ('retour' => -1);
 			}
 		}
-		
+
 		Request::forward ($url);
 	}
 	
 	public function logoutAction () {
 		$this->view->user->logout ();
-		Cache::clean ();
 
 		Request::forward (array ('params' => array ('retour' => 2)));
 	}

@@ -61,7 +61,7 @@ class Log {
 			if ($file !== false) {
 				$log = '[' . date('r') . ']';
 				$log .= ' [' . $level_label . ']';
-				$log .= ' ' . $information . "\n";
+				$log .= ' --- ' . $information . "\n";
 				fwrite ($file, $log); 
 				fclose ($file);
 			} else {
@@ -83,7 +83,10 @@ class Log {
 	 * @param $file_name fichier de log, par défaut LOG_PATH/application.log
 	 */
 	public static function recordRequest($file_name = null) {
-		self::record('$_GET content : ' . print_r($_GET, true), Log::NOTICE, $file_name);
-		self::record('$_POST content : ' . print_r($_POST, true), Log::NOTICE, $file_name);
+		$msg_get = str_replace("\n", '', '$_GET content : ' . print_r($_GET, true));
+		$msg_post = str_replace("\n", '', '$_POST content : ' . print_r($_POST, true));
+
+		self::record($msg_get, Log::NOTICE, $file_name);
+		self::record($msg_post, Log::NOTICE, $file_name);
 	}
 }
