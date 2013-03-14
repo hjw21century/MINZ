@@ -13,7 +13,7 @@ class Configuration {
 	/**
 	 * VERSION est la version actuelle de MINZ
 	 */
-	const VERSION = '1.3.0';
+	const VERSION = '1.3.1';
 
 	/**
 	 * valeurs possibles pour l'"environment"

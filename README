@@ -22,6 +22,9 @@ INSTALLATION
 
 ========
 CHANGELOG
+2013-03-14 Changes with MINZ 1.3.1 :
+ *) Correction affichage lorsque mauvais controller ou mauvaise action
+
 2013-03-10 Changes with MINZ 1.3.0 :
  *) Alias de simplification de l'écriture des Url : _url(controller, actions, param, value, ...)
  *) Traductions avec variables possibles
