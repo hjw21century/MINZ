@@ -95,7 +95,19 @@ class FrontController {
 			Response::send ();
 		} catch (MinzException $e) {
 			Log::record ($e->getMessage (), Log::ERROR);
-			$this->killApp ();
+
+			if ($e instanceof FileNotExistException ||
+			    $e instanceof ControllerNotExistException ||
+			    $e instanceof ControllerNotActionControllerException ||
+			    $e instanceof ActionException) {
+				Error::error (
+					404,
+					array ('error' => array ($e->getMessage ())),
+					true
+				);
+			} else {
+				$this->killApp ();
+			}
 		}
 	}
 	

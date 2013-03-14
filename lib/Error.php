@@ -17,8 +17,9 @@ class Error {
 	*      > $logs['error']
 	*      > $logs['warning']
 	*      > $logs['notice']
+	* @param $redirect indique s'il faut forcer la redirection (les logs ne seront pas transmis)
 	*/
-	public static function error ($code = 404, $logs = array ()) {
+	public static function error ($code = 404, $logs = array (), $redirect = false) {
 		$logs = self::processLogs ($logs);
 		$error_filename = APP_PATH . '/controllers/errorController.php';
 		
@@ -29,10 +30,16 @@ class Error {
 			);
 			
 			Response::setHeader ($code);
-			Request::forward (array (
-				'c' => 'error',
-				'params' => $params
-			));
+			if ($redirect) {
+				Request::forward (array (
+					'c' => 'error'
+				), true);
+			} else {
+				Request::forward (array (
+					'c' => 'error',
+					'params' => $params
+				), false);
+			}
 		} else {
 			$text = '<h1>An error occured</h1>'."\n";
 			
