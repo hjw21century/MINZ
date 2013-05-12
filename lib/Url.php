@@ -24,7 +24,11 @@ class Url {
 		if (is_array ($url) && isset ($url['protocol'])) {
 			$protocol = $url['protocol'];
 		} else {
-			$protocol = 'http';
+			if(isset($_SERVER['HTTPS']) && $_SERVER["HTTPS"] == 'on') {
+				$protocol = 'https';
+			} else {
+				$protocol = 'http';
+			}
 		}
 		$url_string .= $protocol . '://';
 		
